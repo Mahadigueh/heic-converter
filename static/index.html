@@ -17,21 +17,19 @@
             <h1 class="text-4xl font-bold text-gray-900 mb-3">
                 Convertisseur HEIC → PNG / JPG
             </h1>
-            <p class="text-gray-600 text-lg max-w-xl mx-auto">
-                Convertis rapidement tes photos iPhone en PNG (avec transparence) ou JPG haute qualité. 
-                <span class="text-purple-600 font-medium">Simple, gratuit et privé.</span>
+            <p class="text-gray-600 text-lg">
+                Convertis tes photos iPhone rapidement et gratuitement
             </p>
         </div>
 
         <div class="bg-white rounded-3xl shadow-2xl p-10">
-            <!-- Explication rapide -->
-            <div class="bg-purple-50 border border-purple-100 rounded-2xl p-5 mb-8 text-sm">
+            <!-- Info temps d'attente -->
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-8 text-sm">
                 <p class="flex items-start gap-3">
-                    <i class="fas fa-info-circle text-purple-500 mt-0.5"></i>
+                    <i class="fas fa-clock text-amber-500 mt-0.5"></i>
                     <span>
-                        Même si ton iPhone convertit parfois automatiquement en JPG lors du partage, 
-                        notre outil est idéal pour : transférer vers Windows, garder la transparence (PNG), 
-                        convertir plusieurs photos d’un coup, ou obtenir une meilleure qualité.
+                        <strong>Attention :</strong> La conversion peut prendre entre <strong>20 et 45 secondes</strong> par photo.<br>
+                        C’est normal car nous priorisons la confidentialité (aucun fichier n’est stocké).
                     </span>
                 </p>
             </div>
@@ -41,12 +39,11 @@
                  class="drop-zone border-3 border-dashed border-purple-300 rounded-2xl p-16 text-center cursor-pointer hover:border-purple-400 bg-gray-50">
                 <i class="fas fa-cloud-upload-alt text-7xl text-purple-400 mb-6"></i>
                 <p class="text-2xl font-medium text-gray-800 mb-2">Dépose tes fichiers HEIC ici</p>
-                <p class="text-gray-500 mb-6">ou clique pour sélectionner</p>
+                <p class="text-gray-500 mb-6">ou clique pour sélectionner (max 5 fichiers)</p>
                 <label class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-2xl cursor-pointer transition text-lg font-medium">
                     Choisir des fichiers
                     <input type="file" id="fileInput" accept=".heic,.heif" multiple class="hidden">
                 </label>
-                <p class="text-xs text-gray-400 mt-8">• PNG recommandé pour la transparence • Max 50 Mo par fichier</p>
             </div>
 
             <!-- Options format -->
@@ -70,6 +67,7 @@
                 <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
                     <div id="progressBar" class="h-full bg-gradient-to-r from-purple-500 to-purple-600 w-0 transition-all"></div>
                 </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">Conversion en cours... Merci de patienter</p>
             </div>
 
             <!-- Résultat -->
@@ -80,7 +78,7 @@
                     <a id="downloadLink" 
                        class="mt-6 inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-2xl text-lg font-medium transition">
                         <i class="fas fa-download"></i>
-                        Télécharger le fichier
+                        Télécharger
                     </a>
                 </div>
             </div>
@@ -90,125 +88,125 @@
 
         <!-- Confidentialité -->
         <div class="mt-10 text-center text-sm text-gray-500">
-            🔒 Vos fichiers sont traités sur notre serveur et <strong>supprimés automatiquement</strong> après la conversion.<br>
-            Aucune photo n’est conservée.
+            🔒 Vos fichiers sont supprimés automatiquement après la conversion.<br>
+            Aucune donnée n’est conservée.
         </div>
     </div>
-    
-<script>
-    let selectedFormat = 'png';
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const status = document.getElementById('status');
-    const result = document.getElementById('result');
-    const errorDiv = document.getElementById('error');
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
-    const fileNameEl = document.getElementById('fileName');
-    const downloadLink = document.getElementById('downloadLink');
 
-    function setFormat(format) {
-        selectedFormat = format;
-        document.querySelectorAll('.format-btn').forEach(btn => {
-            if (btn.id === `btn-${format}`) {
-                btn.classList.add('active', 'border-purple-600', 'text-purple-600');
-                btn.classList.remove('border-gray-300');
-            } else {
-                btn.classList.remove('active', 'border-purple-600', 'text-purple-600');
-                btn.classList.add('border-gray-300');
-            }
-        });
-    }
+    <script>
+        let selectedFormat = 'png';
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const status = document.getElementById('status');
+        const result = document.getElementById('result');
+        const errorDiv = document.getElementById('error');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const fileNameEl = document.getElementById('fileName');
+        const downloadLink = document.getElementById('downloadLink');
 
-    dropZone.addEventListener('dragover', e => { 
-        e.preventDefault(); 
-        dropZone.classList.add('dragover'); 
-    });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', e => {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-        handleFiles(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', e => {
-        if (e.target.files.length > 0) handleFiles(e.target.files);
-    });
-
-    async function handleFiles(files) {
-        if (files.length === 0) return;
-
-        status.classList.remove('hidden');
-        result.classList.add('hidden');
-        errorDiv.classList.add('hidden');
-
-        const fileNames = Array.from(files).map(f => f.name).join(', ');
-        fileNameEl.textContent = files.length > 1 
-            ? `${files.length} fichiers sélectionnés` 
-            : files[0].name;
-
-        progressBar.style.width = '0%';
-        progressText.textContent = '0%';
-
-        const formData = new FormData();
-        for (let file of files) {
-            if (file.name.toLowerCase().match(/\.(heic|heif)$/)) {
-                formData.append('files', file);
-            }
-        }
-        formData.append('format', selectedFormat);
-
-        try {
-            const response = await fetch('/convert', { 
-                method: 'POST', 
-                body: formData 
+        function setFormat(format) {
+            selectedFormat = format;
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                if (btn.id === `btn-${format}`) {
+                    btn.classList.add('active', 'border-purple-600', 'text-purple-600');
+                    btn.classList.remove('border-gray-300');
+                } else {
+                    btn.classList.remove('active', 'border-purple-600', 'text-purple-600');
+                    btn.classList.add('border-gray-300');
+                }
             });
-
-            if (!response.ok) {
-                const err = await response.json();
-                throw new Error(err.detail || 'Erreur lors de la conversion');
-            }
-
-            // Progression simulée
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 25 + 20;
-                if (progress > 95) progress = 95;
-                progressBar.style.width = `${progress}%`;
-                progressText.textContent = `${Math.round(progress)}%`;
-            }, 100);
-
-            const blob = await response.blob();
-            clearInterval(interval);
-            progressBar.style.width = '100%';
-            progressText.textContent = '100%';
-
-            const url = URL.createObjectURL(blob);
-            
-            if (files.length === 1) {
-                const originalName = files[0].name.replace(/\.(heic|heif)$/i, '');
-                const ext = selectedFormat === 'png' ? 'png' : 'jpg';
-                downloadLink.download = `${originalName}_converted.${ext}`;
-            } else {
-                downloadLink.download = "heic_converted_files.zip";
-            }
-            
-            downloadLink.href = url;
-            result.classList.remove('hidden');
-
-        } catch (err) {
-            showError(err.message);
         }
-    }
 
-    function showError(msg) {
-        errorDiv.textContent = msg;
-        errorDiv.classList.remove('hidden');
-        status.classList.add('hidden');
-    }
+        dropZone.addEventListener('dragover', e => { 
+            e.preventDefault(); 
+            dropZone.classList.add('dragover'); 
+        });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
 
-    // Initialisation
-    setFormat('png');
-</script>
+        fileInput.addEventListener('change', e => {
+            if (e.target.files.length > 0) handleFiles(e.target.files);
+        });
+
+        async function handleFiles(files) {
+            if (files.length === 0 || files.length > 5) {
+                showError(files.length > 5 ? "Maximum 5 fichiers à la fois." : "Aucun fichier sélectionné.");
+                return;
+            }
+
+            status.classList.remove('hidden');
+            result.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+
+            fileNameEl.textContent = files.length > 1 
+                ? `${files.length} fichiers sélectionnés` 
+                : files[0].name;
+
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+
+            const formData = new FormData();
+            for (let file of files) {
+                if (file.name.toLowerCase().match(/\.(heic|heif)$/)) {
+                    formData.append('files', file);
+                }
+            }
+            formData.append('format', selectedFormat);
+
+            try {
+                const response = await fetch('/convert', { 
+                    method: 'POST', 
+                    body: formData 
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || 'Erreur lors de la conversion');
+                }
+
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 12 + 8;
+                    if (progress > 92) progress = 92;
+                    progressBar.style.width = `${progress}%`;
+                    progressText.textContent = `${Math.round(progress)}%`;
+                }, 400);
+
+                const blob = await response.blob();
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                progressText.textContent = '100%';
+
+                const url = URL.createObjectURL(blob);
+                
+                if (files.length === 1) {
+                    const originalName = files[0].name.replace(/\.(heic|heif)$/i, '');
+                    const ext = selectedFormat === 'png' ? 'png' : 'jpg';
+                    downloadLink.download = `${originalName}_converted.${ext}`;
+                } else {
+                    downloadLink.download = "heic_converted_files.zip";
+                }
+                
+                downloadLink.href = url;
+                result.classList.remove('hidden');
+
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        function showError(msg) {
+            errorDiv.textContent = msg;
+            errorDiv.classList.remove('hidden');
+            status.classList.add('hidden');
+        }
+
+        setFormat('png');
+    </script>
 </body>
 </html>
