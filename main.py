@@ -14,7 +14,7 @@ import asyncio
 
 register_heif_opener()
 
-app = FastAPI(title="Convertisseur HEIC → PNG/JPG", version="1.5")
+app = FastAPI(title="Convertisseur HEIC → PNG/JPG")
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,7 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Servir les fichiers statiques
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home():
@@ -34,8 +35,8 @@ def convert_single_file(file_content: bytes, filename: str, output_format: str):
     try:
         heif_file = open_heif(io.BytesIO(file_content), convert_hdr_to_8bit=True)
         image = heif_file.to_pillow()
-        
         output = io.BytesIO()
+        
         if output_format.lower() == "jpg":
             image = image.convert("RGB")
             image.save(output, format="JPEG", quality=85, optimize=True)
@@ -50,8 +51,7 @@ def convert_single_file(file_content: bytes, filename: str, output_format: str):
         original_name = os.path.splitext(filename)[0]
         new_filename = f"{original_name}_converted.{ext}"
         return (new_filename, output.getvalue(), media_type)
-    except Exception as e:
-        print(f"Erreur {filename}: {e}")
+    except Exception:
         return None
 
 @app.post("/convert")
@@ -75,16 +75,18 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
         futures = [loop.run_in_executor(executor, convert_single_file, content, filename, format) for content, filename in file_data]
         results = await asyncio.gather(*futures)
 
-    for result in results:
-        if result:
-            converted_files.append(result)
+    converted_files = [r for r in results if r]
 
     if not converted_files:
         raise HTTPException(500, detail="Échec de la conversion.")
 
     if len(converted_files) == 1:
         filename, data, media_type = converted_files[0]
-        return StreamingResponse(io.BytesIO(data), media_type=media_type, headers={"Content-Disposition": f'attachment; filename="{filename}"'})
+        return StreamingResponse(
+            io.BytesIO(data),
+            media_type=media_type,
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+        )
 
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as z:
@@ -92,8 +94,8 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
             z.writestr(filename, data)
     zip_buffer.seek(0)
 
-    return StreamingResponse(zip_buffer, media_type="application/zip", headers={"Content-Disposition": 'attachment; filename="heic_converted_files.zip"'})
-
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+    return StreamingResponse(
+        zip_buffer,
+        media_type="application/zip",
+        headers={"Content-Disposition": 'attachment; filename="heic_converted_files.zip"'}
+    )
