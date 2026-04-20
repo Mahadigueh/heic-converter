@@ -3,36 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convertisseur HEIC → PNG/JPG Gratuit - replygen.ca</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title data-i18n="title">Convertisseur HEIC → PNG/JPG Gratuit</title>
     
     <!-- Script Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2929730390036287"
      crossorigin="anonymous"></script>
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
     <style>
         .drop-zone { transition: all 0.3s ease; }
         .drop-zone.dragover { background-color: #f3e8ff; border-color: #a855f7; transform: scale(1.02); }
+        .lang-btn { transition: all 0.2s; }
+        .lang-btn.active { background-color: #7c3aed; color: white; border-color: #7c3aed; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="max-w-4xl mx-auto py-12 px-6">
+        <!-- Sélecteur de langue -->
+        <div class="flex justify-end mb-8 gap-2">
+            <button onclick="changeLanguage('fr')" class="lang-btn active px-5 py-2 rounded-2xl text-sm font-medium border-2 border-transparent" data-lang="fr">🇫🇷 FR</button>
+            <button onclick="changeLanguage('en')" class="lang-btn px-5 py-2 rounded-2xl text-sm font-medium border-2 border-transparent" data-lang="en">🇬🇧 EN</button>
+            <button onclick="changeLanguage('es')" class="lang-btn px-5 py-2 rounded-2xl text-sm font-medium border-2 border-transparent" data-lang="es">🇪🇸 ES</button>
+        </div>
+
         <!-- Header -->
         <div class="text-center mb-12">
-            <h1 class="text-5xl font-bold text-gray-900 mb-4">
-                Convertisseur HEIC → PNG / JPG
-            </h1>
-            <p class="text-xl text-gray-600">
-                Convertis rapidement tes photos iPhone en PNG (avec transparence) ou JPG haute qualité
-            </p>
+            <h1 id="main-title" class="text-5xl font-bold text-gray-900 mb-4" data-i18n="title">Convertisseur HEIC → PNG / JPG</h1>
+            <p id="subtitle" class="text-xl text-gray-600" data-i18n="subtitle">Convertis rapidement tes photos iPhone en PNG (avec transparence) ou JPG haute qualité</p>
+        </div>
+
+        <!-- AdSense Automatique / Bannière haute (optionnel) -->
+        <div class="mb-8 text-center min-h-[100px]">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-2929730390036287"
+                 data-ad-slot="YOUR_SLOT_1_HERE"   <!-- Remplace par ton slot haut -->
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
         </div>
 
         <!-- Message d'attente -->
         <div class="bg-amber-50 border border-amber-200 rounded-3xl p-6 mb-10 text-sm max-w-2xl mx-auto">
             <p class="flex items-start gap-3">
                 <i class="fas fa-clock text-amber-500 mt-1 text-xl"></i>
-                <span>
+                <span id="warning" data-i18n="warning">
                     <strong>Attention :</strong> La conversion peut prendre entre <strong>15 et 45 secondes</strong> par photo.<br>
                     Nous priorisons la confidentialité : vos fichiers sont supprimés immédiatement après la conversion.
                 </span>
@@ -43,24 +59,24 @@
             <!-- Drop Zone -->
             <div id="dropZone" class="drop-zone border-4 border-dashed border-purple-300 rounded-3xl p-20 text-center cursor-pointer hover:border-purple-400 bg-gray-50">
                 <i class="fas fa-cloud-upload-alt text-8xl text-purple-400 mb-8"></i>
-                <p class="text-3xl font-semibold text-gray-800 mb-3">Dépose tes fichiers HEIC ici</p>
-                <p class="text-gray-500 text-lg mb-8">ou</p>
+                <p id="drop-text" class="text-3xl font-semibold text-gray-800 mb-3" data-i18n="drop_text">Dépose tes fichiers HEIC ici</p>
+                <p id="or-text" class="text-gray-500 text-lg mb-8" data-i18n="or">ou</p>
                 <label class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-10 py-5 rounded-2xl cursor-pointer transition text-xl font-medium">
-                    Choisir des fichiers
+                    <span id="choose-text" data-i18n="choose_files">Choisir des fichiers</span>
                     <input type="file" id="fileInput" accept=".heic,.heif" multiple class="hidden">
                 </label>
-                <p class="text-sm text-gray-400 mt-10">Maximum 5 fichiers • PNG recommandé pour conserver la transparence</p>
+                <p id="max-files" class="text-sm text-gray-400 mt-10" data-i18n="max_files">Maximum 5 fichiers • PNG recommandé pour conserver la transparence</p>
             </div>
 
             <!-- Format selection -->
             <div class="mt-10 flex justify-center gap-6">
                 <button onclick="setFormat('png')" id="btn-png"
                         class="format-btn active px-10 py-4 rounded-2xl font-semibold border-2 border-purple-600 text-purple-600 text-lg">
-                    PNG (avec transparence)
+                    <span data-i18n="png_btn">PNG (avec transparence)</span>
                 </button>
                 <button onclick="setFormat('jpg')" id="btn-jpg"
                         class="format-btn px-10 py-4 rounded-2xl font-semibold border-2 border-gray-300 hover:border-gray-400 text-lg">
-                    JPG (haute qualité)
+                    <span data-i18n="jpg_btn">JPG (haute qualité)</span>
                 </button>
             </div>
 
@@ -73,18 +89,18 @@
                 <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
                     <div id="progressBar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all duration-300"></div>
                 </div>
-                <p class="text-center text-gray-500 mt-4">Conversion en cours... Merci de patienter</p>
+                <p id="converting-text" class="text-center text-gray-500 mt-4" data-i18n="converting">Conversion en cours... Merci de patienter</p>
             </div>
 
             <!-- Result -->
             <div id="result" class="hidden mt-10 text-center">
                 <div class="bg-green-50 border border-green-200 rounded-3xl p-10">
                     <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
-                    <p class="text-2xl font-semibold text-green-700 mb-2">Conversion réussie !</p>
+                    <p id="success-text" class="text-2xl font-semibold text-green-700 mb-2" data-i18n="success">Conversion réussie !</p>
                     <a id="downloadLink" 
                        class="mt-8 inline-flex items-center gap-4 bg-green-600 hover:bg-green-700 text-white px-12 py-5 rounded-2xl text-xl font-medium transition">
                         <i class="fas fa-download"></i>
-                        Télécharger le fichier converti
+                        <span data-i18n="download">Télécharger le fichier converti</span>
                     </a>
                 </div>
             </div>
@@ -92,13 +108,91 @@
             <div id="error" class="hidden mt-10 p-6 bg-red-50 border border-red-200 text-red-700 rounded-3xl text-center text-lg"></div>
         </div>
 
+        <!-- AdSense Bannière basse -->
+        <div class="mt-12 text-center min-h-[100px]">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-2929730390036287"
+                 data-ad-slot="YOUR_SLOT_2_HERE"   <!-- Remplace par ton deuxième slot -->
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+
         <!-- Confidentialité -->
-        <div class="mt-12 text-center text-sm text-gray-500">
+        <div class="mt-8 text-center text-sm text-gray-500" data-i18n="privacy">
             🔒 Vos fichiers sont traités de manière sécurisée et <strong>supprimés immédiatement</strong> après la conversion.
         </div>
     </div>
 
     <script>
+        // === Traductions ===
+        const translations = {
+            fr: {
+                title: "Convertisseur HEIC → PNG / JPG",
+                subtitle: "Convertis rapidement tes photos iPhone en PNG (avec transparence) ou JPG haute qualité",
+                warning: "<strong>Attention :</strong> La conversion peut prendre entre <strong>15 et 45 secondes</strong> par photo.<br>Nous priorisons la confidentialité : vos fichiers sont supprimés immédiatement après la conversion.",
+                drop_text: "Dépose tes fichiers HEIC ici",
+                or: "ou",
+                choose_files: "Choisir des fichiers",
+                max_files: "Maximum 5 fichiers • PNG recommandé pour conserver la transparence",
+                png_btn: "PNG (avec transparence)",
+                jpg_btn: "JPG (haute qualité)",
+                converting: "Conversion en cours... Merci de patienter",
+                success: "Conversion réussie !",
+                download: "Télécharger le fichier converti",
+                privacy: "🔒 Vos fichiers sont traités de manière sécurisée et <strong>supprimés immédiatement</strong> après la conversion."
+            },
+            en: {
+                title: "HEIC to PNG / JPG Converter",
+                subtitle: "Quickly convert your iPhone photos to PNG (with transparency) or high-quality JPG",
+                warning: "<strong>Note:</strong> Conversion may take between <strong>15 and 45 seconds</strong> per photo.<br>We prioritize privacy: your files are deleted immediately after conversion.",
+                drop_text: "Drop your HEIC files here",
+                or: "or",
+                choose_files: "Choose files",
+                max_files: "Maximum 5 files • PNG recommended to keep transparency",
+                png_btn: "PNG (with transparency)",
+                jpg_btn: "JPG (high quality)",
+                converting: "Converting... Please wait",
+                success: "Conversion successful!",
+                download: "Download the converted file",
+                privacy: "🔒 Your files are processed securely and <strong>deleted immediately</strong> after conversion."
+            },
+            es: {
+                title: "Convertidor HEIC → PNG / JPG",
+                subtitle: "Convierte rápidamente tus fotos de iPhone a PNG (con transparencia) o JPG de alta calidad",
+                warning: "<strong>Atención:</strong> La conversión puede tardar entre <strong>15 y 45 segundos</strong> por foto.<br>Priorizamos la privacidad: tus archivos se eliminan inmediatamente después de la conversión.",
+                drop_text: "Suelta tus archivos HEIC aquí",
+                or: "o",
+                choose_files: "Elegir archivos",
+                max_files: "Máximo 5 archivos • PNG recomendado para conservar la transparencia",
+                png_btn: "PNG (con transparencia)",
+                jpg_btn: "JPG (alta calidad)",
+                converting: "Convirtiendo... Por favor espera",
+                success: "¡Conversión exitosa!",
+                download: "Descargar el archivo convertido",
+                privacy: "🔒 Tus archivos se procesan de forma segura y se <strong>eliminan inmediatamente</strong> después de la conversión."
+            }
+        };
+
+        let currentLang = 'fr';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+        }
+
+        // === Script de conversion (le même que précédemment) ===
         let selectedFormat = 'png';
 
         const dropZone = document.getElementById('dropZone');
@@ -162,10 +256,7 @@
             try {
                 const response = await fetch('/convert', { method: 'POST', body: formData });
 
-                if (!response.ok) {
-                    const err = await response.json().catch(() => ({}));
-                    throw new Error(err.detail || "Erreur lors de la conversion");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la conversion");
 
                 let progress = 0;
                 const interval = setInterval(() => {
@@ -198,7 +289,9 @@
             status.classList.add('hidden');
         }
 
+        // Initialisation
         setFormat('png');
+        changeLanguage('fr');
     </script>
 </body>
 </html>
