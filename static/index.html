@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .drop-zone { transition: all 0.3s ease; }
-        .drop-zone.dragover { background-color: #f3e8ff; border-color: #7c3aed; transform: scale(1.02); }
+        .drop-zone.dragover { background-color: #f3e8ff; border-color: #7c3aed; }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -20,54 +20,33 @@
             <p class="text-gray-600 mt-3">Convertisseur rapide pour photos iPhone</p>
         </div>
 
-        <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-20 text-center cursor-pointer bg-white">
-            <i class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
-            <p class="text-2xl font-medium">Dépose tes photos HEIC ici</p>
-            <p class="text-gray-500 mt-2">ou clique pour sélectionner</p>
+        <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-16 text-center cursor-pointer bg-white min-h-[280px] flex flex-col items-center justify-center">
+            <i id="drop-icon" class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
+            <p id="drop-text" class="text-2xl font-medium">Dépose tes photos HEIC ici</p>
+            <p id="drop-subtext" class="text-gray-500 mt-2">ou clique pour sélectionner</p>
+            
+            <!-- Zone des fichiers sélectionnés -->
+            <div id="selected-files" class="hidden w-full mt-6 text-left"></div>
+            
             <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
         </div>
 
-        <!-- Progress Area -->
-        <div id="progress-area" class="hidden mt-10">
-            <div class="flex justify-between text-sm mb-3">
-                <span id="status-text" class="font-medium text-purple-700">Conversion en cours...</span>
-                <span id="progress-percent">0%</span>
-            </div>
-            <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all duration-300"></div>
-            </div>
-            <p class="text-center text-xs text-gray-500 mt-6">Cela peut prendre entre 15 et 45 secondes selon le nombre de photos</p>
-        </div>
-
-        <!-- Success Message -->
-        <div id="success-area" class="hidden mt-10 text-center">
-            <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
-            <p class="text-2xl font-semibold text-green-700">Conversion terminée !</p>
-            <p class="text-gray-600 mt-2">Le fichier a été téléchargé automatiquement</p>
-            <button onclick="resetUI()" 
-                    class="mt-8 px-10 py-4 bg-gray-800 hover:bg-gray-900 text-white rounded-2xl">
-                Convertir d'autres photos
-            </button>
-        </div>
-
-        <button onclick="convertHEIC()" 
-                id="convert-btn"
-                class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
+        <button onclick="convertHEIC()" id="convert-btn"
+                class="mt-10 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold disabled:opacity-50">
             Convertir maintenant
         </button>
     </div>
 
     <script>
-        let isConverting = false;
-
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
-        const progressArea = document.getElementById('progress-area');
-        const successArea = document.getElementById('success-area');
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercent = document.getElementById('progress-percent');
-        const statusText = document.getElementById('status-text');
+        const selectedFilesDiv = document.getElementById('selected-files');
+        const dropText = document.getElementById('drop-text');
+        const dropSubtext = document.getElementById('drop-subtext');
+        const dropIcon = document.getElementById('drop-icon');
         const convertBtn = document.getElementById('convert-btn');
+
+        let selectedFiles = [];
 
         dropZone.addEventListener('click', () => fileInput.click());
         dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
@@ -75,70 +54,61 @@
         dropZone.addEventListener('drop', e => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
-            fileInput.files = e.dataTransfer.files;
+            handleFiles(e.dataTransfer.files);
         });
 
+        fileInput.addEventListener('change', () => {
+            handleFiles(fileInput.files);
+        });
+
+        function handleFiles(files) {
+            selectedFiles = Array.from(files);
+            if (selectedFiles.length === 0) return;
+
+            // Afficher les fichiers sélectionnés
+            let html = `<p class="font-medium mb-3">Fichiers sélectionnés (${selectedFiles.length}) :</p><ul class="text-sm text-gray-700 space-y-1">`;
+            selectedFiles.forEach(file => {
+                html += `<li class="flex items-center gap-2"><i class="fas fa-check text-green-500"></i> ${file.name}</li>`;
+            });
+            html += `</ul>`;
+            selectedFilesDiv.innerHTML = html;
+            selectedFilesDiv.classList.remove('hidden');
+
+            // Changer le texte du drop zone
+            dropText.textContent = "Fichiers prêts !";
+            dropSubtext.textContent = "Clique sur le bouton ci-dessous pour convertir";
+            dropIcon.classList.remove('fa-cloud-upload-alt');
+            dropIcon.classList.add('fa-check-circle', 'text-green-500');
+
+            convertBtn.disabled = false;
+        }
+
         async function convertHEIC() {
-            if (isConverting) return;
-            const files = fileInput.files;
-            if (files.length === 0) {
+            if (selectedFiles.length === 0) {
                 alert("Veuillez sélectionner au moins une photo HEIC");
                 return;
             }
 
-            isConverting = true;
-            convertBtn.disabled = true;
-            progressArea.classList.remove('hidden');
-            successArea.classList.add('hidden');
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 20 + 15;
-                if (progress > 93) progress = 93;
-                progressBar.style.width = `${progress}%`;
-                progressPercent.textContent = `${Math.round(progress)}%`;
-            }, 350);
+            const formData = new FormData();
+            selectedFiles.forEach(file => formData.append('files', file));
+            formData.append('format', 'png');
 
             try {
-                const formData = new FormData();
-                for (let file of files) formData.append('files', file);
-                formData.append('format', 'png');
-
                 const res = await fetch('/convert-heic', { method: 'POST', body: formData });
-
-                clearInterval(interval);
-                progressBar.style.width = '100%';
-                progressPercent.textContent = '100%';
-                statusText.textContent = 'Terminé ! Téléchargement...';
-
                 if (!res.ok) throw new Error();
 
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = files.length > 1 ? "heic_converted_files.zip" : "converted_image.png";
+                a.download = selectedFiles.length > 1 ? "heic_converted_files.zip" : "converted_image.png";
                 a.click();
 
-                // Afficher le succès
-                setTimeout(() => {
-                    progressArea.classList.add('hidden');
-                    successArea.classList.remove('hidden');
-                }, 800);
-
+                alert("✅ Conversion terminée ! Le fichier a été téléchargé.");
+                
             } catch (err) {
-                alert("Erreur lors de la conversion. Veuillez réessayer.");
-                resetUI();
-            } finally {
-                isConverting = false;
-                convertBtn.disabled = false;
+                alert("Erreur lors de la conversion. Réessaie.");
             }
-        }
-
-        function resetUI() {
-            progressArea.classList.add('hidden');
-            successArea.classList.add('hidden');
-            fileInput.value = '';
         }
     </script>
 </body>
