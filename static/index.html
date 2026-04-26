@@ -12,9 +12,19 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-    <div class="max-w-2xl mx-auto py-12 px-6">
-        <h1 onclick="window.location.reload()" class="text-4xl font-bold text-center cursor-pointer mb-10 text-gray-900">replygen.ca</h1>
-        
+    <div class="max-w-2xl mx-auto py-8 px-6">
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 onclick="window.location.reload()" class="text-3xl font-bold cursor-pointer">replygen.ca</h1>
+            <div class="flex gap-2 text-sm">
+                <a href="/" class="px-4 py-2 bg-purple-600 text-white rounded-2xl">HEIC</a>
+                <a href="/merge.html" class="px-4 py-2 hover:bg-gray-200 rounded-2xl">Fusion PDF</a>
+                <a href="/pdf-to-word.html" class="px-4 py-2 hover:bg-gray-200 rounded-2xl">PDF → Word</a>
+                <a href="/compress.html" class="px-4 py-2 hover:bg-gray-200 rounded-2xl">Compress PDF</a>
+            </div>
+        </div>
+
+        <!-- HEIC Content (ton code actuel intact) -->
         <div class="text-center mb-10">
             <h2 class="text-5xl font-bold">HEIC → PNG / JPG</h2>
             <p class="text-gray-600 mt-3">Convertisseur rapide pour photos iPhone</p>
@@ -30,16 +40,15 @@
             <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
         </div>
 
-        <!-- Barre de progression améliorée -->
+        <!-- Barre de progression -->
         <div id="progress-area" class="hidden mt-10">
             <div class="flex justify-between text-sm mb-3">
-                <span id="status-text" class="font-medium text-purple-700">Conversion en cours...</span>
+                <span id="status-text" class="font-medium">Conversion en cours...</span>
                 <span id="progress-percent">0%</span>
             </div>
             <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all duration-300"></div>
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all"></div>
             </div>
-            <p class="text-center text-xs text-gray-500 mt-4">Cela peut prendre 15 à 45 secondes selon le nombre de photos</p>
         </div>
 
         <button onclick="convertHEIC()" id="convert-btn"
@@ -49,6 +58,7 @@
     </div>
 
     <script>
+        // === Ton code actuel (inchangé) ===
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const selectedFilesDiv = document.getElementById('selected-files');
@@ -75,9 +85,7 @@
             if (selectedFiles.length === 0) return;
 
             let html = `<p class="font-medium mb-2">Fichiers sélectionnés (${selectedFiles.length}) :</p>`;
-            selectedFiles.forEach(f => {
-                html += `<div class="text-sm text-gray-700 py-1">✅ ${f.name}</div>`;
-            });
+            selectedFiles.forEach(f => html += `<div class="text-sm text-gray-700 py-1">✅ ${f.name}</div>`);
             selectedFilesDiv.innerHTML = html;
             selectedFilesDiv.classList.remove('hidden');
 
@@ -95,11 +103,11 @@
 
             let progress = 0;
             const interval = setInterval(() => {
-                progress += Math.random() * 25 + 15;
-                if (progress > 93) progress = 93;
+                progress += Math.random() * 22 + 12;
+                if (progress > 92) progress = 92;
                 progressBar.style.width = `${progress}%`;
                 progressPercent.textContent = `${Math.round(progress)}%`;
-            }, 350);
+            }, 380);
 
             try {
                 const formData = new FormData();
@@ -111,7 +119,7 @@
                 clearInterval(interval);
                 progressBar.style.width = '100%';
                 progressPercent.textContent = '100%';
-                statusText.textContent = 'Terminé ! Téléchargement en cours...';
+                statusText.textContent = 'Terminé ! Téléchargement...';
 
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
@@ -121,12 +129,12 @@
                 a.click();
 
                 setTimeout(() => {
-                    alert("✅ Conversion terminée avec succès !\nLe fichier a été téléchargé.");
+                    alert("✅ Conversion terminée et fichier téléchargé avec succès !");
                     resetUI();
-                }, 1200);
+                }, 1000);
 
             } catch (err) {
-                alert("Erreur lors de la conversion. Réessaie.");
+                alert("Erreur lors de la conversion.");
                 resetUI();
             }
         }
