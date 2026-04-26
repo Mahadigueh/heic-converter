@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outil Tout-en-Un - replygen.ca</title>
+    <title>HEIC → PNG/JPG - replygen.ca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -13,11 +13,11 @@
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="max-w-2xl mx-auto py-12 px-6">
-        <h1 onclick="window.location.reload()" class="text-4xl font-bold text-center cursor-pointer mb-10">replygen.ca</h1>
+        <h1 onclick="window.location.reload()" class="text-4xl font-bold text-center cursor-pointer mb-10 text-gray-900">replygen.ca</h1>
         
         <div class="text-center mb-10">
-            <h2 class="text-4xl font-bold">HEIC → PNG / JPG</h2>
-            <p class="text-gray-600 mt-2">Convertisseur rapide pour photos iPhone</p>
+            <h2 class="text-5xl font-bold">HEIC → PNG / JPG</h2>
+            <p class="text-gray-600 mt-3">Convertisseur rapide pour photos iPhone</p>
         </div>
 
         <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-20 text-center cursor-pointer bg-white">
@@ -27,31 +27,47 @@
             <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
         </div>
 
-        <!-- Zone de progression -->
+        <!-- Progress Area -->
         <div id="progress-area" class="hidden mt-10">
-            <div class="flex justify-between text-sm mb-2">
-                <span id="status-text" class="font-medium">Conversion en cours...</span>
+            <div class="flex justify-between text-sm mb-3">
+                <span id="status-text" class="font-medium text-purple-700">Conversion en cours...</span>
                 <span id="progress-percent">0%</span>
             </div>
-            <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-full bg-purple-600 w-0 transition-all duration-300"></div>
+            <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all duration-300"></div>
             </div>
-            <p class="text-center text-sm text-gray-500 mt-4">Cela peut prendre 15 à 45 secondes selon le nombre de photos</p>
+            <p class="text-center text-xs text-gray-500 mt-6">Cela peut prendre entre 15 et 45 secondes selon le nombre de photos</p>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-area" class="hidden mt-10 text-center">
+            <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
+            <p class="text-2xl font-semibold text-green-700">Conversion terminée !</p>
+            <p class="text-gray-600 mt-2">Le fichier a été téléchargé automatiquement</p>
+            <button onclick="resetUI()" 
+                    class="mt-8 px-10 py-4 bg-gray-800 hover:bg-gray-900 text-white rounded-2xl">
+                Convertir d'autres photos
+            </button>
         </div>
 
         <button onclick="convertHEIC()" 
+                id="convert-btn"
                 class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
             Convertir maintenant
         </button>
     </div>
 
     <script>
+        let isConverting = false;
+
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const progressArea = document.getElementById('progress-area');
+        const successArea = document.getElementById('success-area');
         const progressBar = document.getElementById('progress-bar');
         const progressPercent = document.getElementById('progress-percent');
         const statusText = document.getElementById('status-text');
+        const convertBtn = document.getElementById('convert-btn');
 
         dropZone.addEventListener('click', () => fileInput.click());
         dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
@@ -63,42 +79,39 @@
         });
 
         async function convertHEIC() {
+            if (isConverting) return;
             const files = fileInput.files;
             if (files.length === 0) {
                 alert("Veuillez sélectionner au moins une photo HEIC");
                 return;
             }
 
-            // Afficher la progression
+            isConverting = true;
+            convertBtn.disabled = true;
             progressArea.classList.remove('hidden');
-            progressBar.style.width = '0%';
-            progressPercent.textContent = '0%';
-            statusText.textContent = 'Conversion en cours...';
+            successArea.classList.add('hidden');
 
-            const formData = new FormData();
-            for (let file of files) formData.append('files', file);
-            formData.append('format', 'png');
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20 + 15;
+                if (progress > 93) progress = 93;
+                progressBar.style.width = `${progress}%`;
+                progressPercent.textContent = `${Math.round(progress)}%`;
+            }, 350);
 
             try {
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += Math.random() * 25 + 10;
-                    if (progress > 92) progress = 92;
-                    progressBar.style.width = `${progress}%`;
-                    progressPercent.textContent = `${Math.round(progress)}%`;
-                }, 400);
+                const formData = new FormData();
+                for (let file of files) formData.append('files', file);
+                formData.append('format', 'png');
 
-                const res = await fetch('/convert-heic', {
-                    method: 'POST',
-                    body: formData
-                });
+                const res = await fetch('/convert-heic', { method: 'POST', body: formData });
 
                 clearInterval(interval);
                 progressBar.style.width = '100%';
                 progressPercent.textContent = '100%';
-                statusText.textContent = 'Conversion terminée ! Téléchargement...';
+                statusText.textContent = 'Terminé ! Téléchargement...';
 
-                if (!res.ok) throw new Error("Erreur serveur");
+                if (!res.ok) throw new Error();
 
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
@@ -107,16 +120,25 @@
                 a.download = files.length > 1 ? "heic_converted_files.zip" : "converted_image.png";
                 a.click();
 
-                // Réinitialiser après téléchargement
+                // Afficher le succès
                 setTimeout(() => {
                     progressArea.classList.add('hidden');
-                    fileInput.value = '';
-                }, 1500);
+                    successArea.classList.remove('hidden');
+                }, 800);
 
             } catch (err) {
-                alert("Erreur lors de la conversion. Réessaie.");
-                progressArea.classList.add('hidden');
+                alert("Erreur lors de la conversion. Veuillez réessayer.");
+                resetUI();
+            } finally {
+                isConverting = false;
+                convertBtn.disabled = false;
             }
+        }
+
+        function resetUI() {
+            progressArea.classList.add('hidden');
+            successArea.classList.add('hidden');
+            fileInput.value = '';
         }
     </script>
 </body>
