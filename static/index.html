@@ -9,10 +9,12 @@
     <style>
         .drop-zone { transition: all 0.3s ease; }
         .drop-zone.dragover { background-color: #f3e8ff; border-color: #7c3aed; transform: scale(1.02); }
+        .tool-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="max-w-6xl mx-auto py-8 px-6">
+        <!-- Header -->
         <div class="flex justify-between items-center mb-10">
             <h1 onclick="goHome()" class="text-4xl font-bold cursor-pointer text-gray-900">replygen.ca</h1>
             <button onclick="goHome()" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl">Accueil</button>
@@ -20,23 +22,44 @@
 
         <div id="main-content">
             <!-- HEIC - Page par défaut -->
-            <div class="max-w-2xl mx-auto">
-                <h2 class="text-4xl font-bold text-center mb-8">HEIC → PNG / JPG</h2>
+            <div class="max-w-2xl mx-auto text-center">
+                <h2 class="text-5xl font-bold mb-4">HEIC → PNG / JPG</h2>
+                <p class="text-gray-600 mb-10">Convertis tes photos iPhone rapidement</p>
+
                 <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-20 text-center cursor-pointer bg-white">
                     <i class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
                     <p class="text-2xl font-medium">Dépose tes photos HEIC ici</p>
+                    <p class="text-gray-500 mt-2">ou clique pour sélectionner</p>
                     <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
                 </div>
-                <button onclick="convertHEIC()" class="mt-10 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">Convertir</button>
+
+                <button onclick="convertHEIC()" class="mt-10 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
+                    Convertir maintenant
+                </button>
+            </div>
+        </div>
+
+        <!-- Menu des autres outils -->
+        <div class="mt-20">
+            <h3 class="text-2xl font-semibold text-center mb-8">Autres outils disponibles</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a onclick="alert('En cours de développement - Fusion PDF')" class="tool-card cursor-pointer bg-white rounded-3xl p-8 text-center border border-red-100 hover:border-red-500">
+                    <i class="fas fa-file-pdf text-5xl text-red-500 mb-4"></i>
+                    <h4 class="font-semibold">Fusionner PDF</h4>
+                </a>
+                <a onclick="alert('En cours de développement - PDF to Word')" class="tool-card cursor-pointer bg-white rounded-3xl p-8 text-center border border-blue-100 hover:border-blue-500">
+                    <i class="fas fa-file-word text-5xl text-blue-600 mb-4"></i>
+                    <h4 class="font-semibold">PDF → Word</h4>
+                </a>
+                <a onclick="alert('En cours de développement - Compress PDF')" class="tool-card cursor-pointer bg-white rounded-3xl p-8 text-center border border-amber-100 hover:border-amber-500">
+                    <i class="fas fa-compress text-5xl text-amber-500 mb-4"></i>
+                    <h4 class="font-semibold">Compresser PDF</h4>
+                </a>
             </div>
         </div>
     </div>
 
     <script>
-        function goHome() {
-            window.location.reload();
-        }
-
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
 
@@ -51,25 +74,38 @@
 
         async function convertHEIC() {
             const files = fileInput.files;
-            if (files.length === 0) return alert("Sélectionne au moins une photo HEIC");
+            if (files.length === 0) {
+                alert("Veuillez sélectionner au moins une photo HEIC");
+                return;
+            }
 
             const formData = new FormData();
-            for (let file of files) formData.append('files', file);
+            for (let file of files) {
+                formData.append('files', file);
+            }
             formData.append('format', 'png');
 
             try {
-                const res = await fetch('/convert-heic', { method: 'POST', body: formData });
-                if (!res.ok) throw new Error("Erreur");
+                const res = await fetch('/convert-heic', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!res.ok) throw new Error("Erreur serveur");
 
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = files.length > 1 ? "heic_converted.zip" : "converted.png";
+                a.download = files.length > 1 ? "heic_converted_files.zip" : "converted_image.png";
                 a.click();
-            } catch (e) {
-                alert("Erreur lors de la conversion");
+            } catch (err) {
+                alert("Erreur lors de la conversion. Réessaie.");
             }
+        }
+
+        function goHome() {
+            window.location.reload();
         }
     </script>
 </body>
