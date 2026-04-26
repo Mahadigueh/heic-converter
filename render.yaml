@@ -1,16 +1,6 @@
 services:
   - type: web
     name: replygen-ca
-    env: python
-    buildCommand: pip install -r requirements.txt
+    env: docker
+    dockerfilePath: Dockerfile
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.12
-    buildPlan: free  # ou starter si tu as le plan payant
-    nixpacks:
-      pkgs:
-        - mupdf
-        - mupdf-tools
-        - libjpeg-turbo
-        - zlib
