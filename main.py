@@ -64,7 +64,7 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
             headers={"Content-Disposition": f"attachment; filename=converted.{format}"}
         )
 
-# ==================== FUSION PDF (avec fitz - plus stable) ====================
+# ==================== FUSION PDF ====================
 @app.post("/merge-pdf")
 async def merge_pdf(files: List[UploadFile] = File(...)):
     if len(files) < 2:
