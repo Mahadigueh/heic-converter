@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outil Tout-en-Un - replygen.ca</title>
+    <title>HEIC → PNG/JPG - replygen.ca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -13,88 +13,50 @@
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="max-w-2xl mx-auto py-12 px-6">
-        <h1 onclick="goHome()" class="text-4xl font-bold text-center cursor-pointer mb-10 text-gray-900">replygen.ca</h1>
-
-        <!-- Navigation des outils -->
-        <div class="flex justify-center gap-4 mb-10 flex-wrap">
-            <button onclick="switchTool('heic')" class="tool-btn active px-6 py-3 rounded-2xl font-medium">HEIC → PNG/JPG</button>
-            <button onclick="switchTool('merge')" class="tool-btn px-6 py-3 rounded-2xl font-medium">Fusionner PDF</button>
-            <button onclick="switchTool('pdfword')" class="tool-btn px-6 py-3 rounded-2xl font-medium">PDF → Word</button>
-            <button onclick="switchTool('compress')" class="tool-btn px-6 py-3 rounded-2xl font-medium">Compresser PDF</button>
+        <h1 onclick="window.location.reload()" class="text-4xl font-bold text-center cursor-pointer mb-10 text-gray-900">replygen.ca</h1>
+        
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-bold">HEIC → PNG / JPG</h2>
+            <p class="text-gray-600 mt-3">Convertisseur rapide pour photos iPhone</p>
         </div>
 
-        <div id="tool-container">
-            <!-- Le contenu de l'outil actuel sera injecté ici -->
+        <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-16 text-center cursor-pointer bg-white">
+            <i id="drop-icon" class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
+            <p id="drop-text" class="text-2xl font-medium">Dépose tes photos HEIC ici</p>
+            <p id="drop-subtext" class="text-gray-500 mt-2">ou clique pour sélectionner</p>
+            
+            <div id="selected-files" class="hidden w-full mt-8 text-left max-h-48 overflow-y-auto"></div>
+            
+            <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
         </div>
+
+        <button onclick="convertHEIC()" id="convert-btn"
+                class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
+            Convertir maintenant
+        </button>
     </div>
 
     <script>
-        let currentTool = 'heic';
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const selectedFilesDiv = document.getElementById('selected-files');
+        const dropText = document.getElementById('drop-text');
+        const dropSubtext = document.getElementById('drop-subtext');
+        const dropIcon = document.getElementById('drop-icon');
+        const convertBtn = document.getElementById('convert-btn');
 
-        function switchTool(tool) {
-            currentTool = tool;
-            document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            loadTool(tool);
-        }
-
-        function loadTool(tool) {
-            let html = '';
-
-            if (tool === 'heic') {
-                html = createToolHTML('HEIC → PNG / JPG', 'photos HEIC', '.heic,.heif', '/convert-heic', 'png');
-            } else if (tool === 'merge') {
-                html = createToolHTML('Fusionner PDF', 'fichiers PDF', '.pdf', '/merge-pdf', null, true);
-            } else if (tool === 'pdfword') {
-                html = createToolHTML('PDF → Word', 'fichier PDF', '.pdf', '/pdf-to-word', null);
-            } else if (tool === 'compress') {
-                html = createToolHTML('Compresser PDF', 'fichier PDF', '.pdf', '/compress-pdf', null);
-            }
-
-            document.getElementById('tool-container').innerHTML = html;
-            setupDropZone();
-        }
-
-        function createToolHTML(title, fileType, accept, endpoint, format = null, isMultiple = false) {
-            return `
-                <div class="text-center mb-10">
-                    <h2 class="text-5xl font-bold">${title}</h2>
-                    <p class="text-gray-600 mt-3">Convertis tes ${fileType} rapidement</p>
-                </div>
-
-                <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-16 text-center cursor-pointer bg-white">
-                    <i id="drop-icon" class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
-                    <p id="drop-text" class="text-2xl font-medium">Dépose tes ${fileType} ici</p>
-                    <p id="drop-subtext" class="text-gray-500 mt-2">ou clique pour sélectionner</p>
-                    <div id="selected-files" class="hidden w-full mt-8 text-left max-h-48 overflow-y-auto"></div>
-                    <input type="file" id="file-input" accept="${accept}" ${isMultiple ? 'multiple' : ''} class="hidden">
-                </div>
-
-                <button onclick="startConversion('${endpoint}', ${format ? `'${format}'` : 'null'})" id="convert-btn"
-                        class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
-                    Lancer la conversion
-                </button>
-            `;
-        }
-
-        // Le reste du script (drag & drop, progression, etc.) est identique pour tous les outils
         let selectedFiles = [];
 
-        function setupDropZone() {
-            const dropZone = document.getElementById('drop-zone');
-            const fileInput = document.getElementById('file-input');
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
 
-            dropZone.addEventListener('click', () => fileInput.click());
-            dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-            dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-            dropZone.addEventListener('drop', e => {
-                e.preventDefault();
-                dropZone.classList.remove('dragover');
-                handleFiles(e.dataTransfer.files);
-            });
-
-            fileInput.addEventListener('change', () => handleFiles(fileInput.files));
-        }
+        fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
         function handleFiles(files) {
             selectedFiles = Array.from(files);
@@ -104,40 +66,38 @@
             selectedFiles.forEach(f => {
                 html += `<div class="text-sm text-gray-700 py-1">✅ ${f.name}</div>`;
             });
-            document.getElementById('selected-files').innerHTML = html;
-            document.getElementById('selected-files').classList.remove('hidden');
+            selectedFilesDiv.innerHTML = html;
+            selectedFilesDiv.classList.remove('hidden');
 
-            document.getElementById('drop-text').textContent = "Fichiers prêts !";
-            document.getElementById('drop-subtext').textContent = "Clique sur le bouton ci-dessous";
+            dropText.textContent = "Fichiers prêts !";
+            dropSubtext.textContent = "Clique sur le bouton ci-dessous";
+            dropIcon.classList.remove('fa-cloud-upload-alt');
+            dropIcon.classList.add('fa-check-circle', 'text-green-500');
         }
 
-        async function startConversion(endpoint, format) {
-            if (selectedFiles.length === 0) return alert("Sélectionne au moins un fichier");
+        async function convertHEIC() {
+            if (selectedFiles.length === 0) return alert("Sélectionne au moins une photo");
 
             const formData = new FormData();
             selectedFiles.forEach(file => formData.append('files', file));
-            if (format) formData.append('format', format);
+            formData.append('format', 'png');
 
-            // Ici tu peux ajouter la barre de progression plus tard si tu veux
             try {
-                const res = await fetch(endpoint, { method: 'POST', body: formData });
+                const res = await fetch('/convert-heic', { method: 'POST', body: formData });
                 if (!res.ok) throw new Error();
 
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = "result." + (endpoint.includes('word') ? 'docx' : 'pdf');
+                a.download = selectedFiles.length > 1 ? "heic_converted_files.zip" : "converted_image.png";
                 a.click();
 
-                alert("✅ Opération terminée ! Le fichier a été téléchargé.");
+                alert("✅ Conversion terminée ! Le fichier a été téléchargé.");
             } catch (err) {
-                alert("Erreur lors du traitement.");
+                alert("Erreur lors de la conversion.");
             }
         }
-
-        // Chargement initial
-        loadTool('heic');
     </script>
 </body>
 </html>
