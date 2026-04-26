@@ -4,21 +4,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import io
 from typing import List
+from PIL import Image
+from pillow_heif import register_heif_opener, open_heif
 import fitz  # PyMuPDF
 from docx import Document
-from pypdf import PdfReader, PdfWriter  # On enlève PdfMerger temporairement
+from pypdf import PdfReader, PdfWriter
 
-# Pour la fusion, on utilise fitz (plus stable)
-def merge_pdfs_with_fitz(files):
-    merger = fitz.open()
-    for file in files:
-        if not file.filename.lower().endswith('.pdf'):
-            continue
-        content = file.file.read()
-        doc = fitz.open(stream=content, filetype="pdf")
-        merger.insert_pdf(doc)
-        doc.close()
-    return merger
+register_heif_opener()
 
 app = FastAPI(title="Outil Tout-en-Un - replygen.ca")
 
@@ -36,13 +28,59 @@ async def home():
     with open("static/index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# ==================== FUSION PDF (avec fitz) ====================
+# ==================== HEIC CONVERSION ====================
+@app.post("/convert-heic")
+async def convert_heic(files: List[UploadFile] = File(...), format: str = "png"):
+    if not files:
+        raise HTTPException(400, detail="Aucun fichier envoyé")
+
+    images = []
+    for file in files:
+        content = await file.read()
+        heif_file = open_heif(content)
+        img = heif_file.to_pillow()
+        images.append(img)
+
+    # Si plusieurs fichiers → ZIP
+    if len(images) > 1:
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w") as zip_file:
+            for i, img in enumerate(images):
+                buf = io.BytesIO()
+                img.save(buf, format=format.upper())
+                zip_file.writestr(f"image_{i+1}.{format}", buf.getvalue())
+        zip_buffer.seek(0)
+        return StreamingResponse(
+            zip_buffer,
+            media_type="application/zip",
+            headers={"Content-Disposition": "attachment; filename=heic_converted.zip"}
+        )
+    else:
+        # Un seul fichier
+        buf = io.BytesIO()
+        images[0].save(buf, format=format.upper())
+        buf.seek(0)
+        return StreamingResponse(
+            buf,
+            media_type=f"image/{format}",
+            headers={"Content-Disposition": f"attachment; filename=converted.{format}"}
+        )
+
+# ==================== FUSION PDF ====================
 @app.post("/merge-pdf")
 async def merge_pdf(files: List[UploadFile] = File(...)):
     if len(files) < 2:
-        raise HTTPException(400, detail="Vous devez envoyer au moins 2 fichiers PDF")
+        raise HTTPException(400, detail="Minimum 2 fichiers PDF requis")
 
-    merger = merge_pdfs_with_fitz(files)
+    merger = fitz.open()
+    for file in files:
+        if not file.filename.lower().endswith('.pdf'):
+            continue
+        content = await file.read()
+        doc = fitz.open(stream=content, filetype="pdf")
+        merger.insert_pdf(doc)
+        doc.close()
+
     output = io.BytesIO()
     merger.save(output)
     merger.close()
