@@ -3,12 +3,13 @@ from fastapi.responses import StreamingResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import io
+import zipfile
 from typing import List
 from PIL import Image
 from pillow_heif import register_heif_opener, open_heif
 import fitz  # PyMuPDF
 from docx import Document
-from pypdf import PdfReader, PdfWriter
+from pypdf import PdfMerger
 
 register_heif_opener()
 
@@ -28,26 +29,26 @@ async def home():
     with open("static/index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# ==================== HEIC CONVERSION ====================
+# ==================== HEIC ====================
 @app.post("/convert-heic")
 async def convert_heic(files: List[UploadFile] = File(...), format: str = "png"):
     if not files:
         raise HTTPException(400, detail="Aucun fichier envoyé")
 
-    images = []
+    converted_images = []
     for file in files:
         content = await file.read()
         heif_file = open_heif(content)
         img = heif_file.to_pillow()
-        images.append(img)
+        converted_images.append(img)
 
-    # Si plusieurs fichiers → ZIP
-    if len(images) > 1:
+    # Plusieurs fichiers → ZIP
+    if len(converted_images) > 1:
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, "w") as zip_file:
-            for i, img in enumerate(images):
+            for i, img in enumerate(converted_images):
                 buf = io.BytesIO()
-                img.save(buf, format=format.upper())
+                img.save(buf, format=format.upper(), quality=95)
                 zip_file.writestr(f"image_{i+1}.{format}", buf.getvalue())
         zip_buffer.seek(0)
         return StreamingResponse(
@@ -58,7 +59,7 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
     else:
         # Un seul fichier
         buf = io.BytesIO()
-        images[0].save(buf, format=format.upper())
+        converted_images[0].save(buf, format=format.upper(), quality=95)
         buf.seek(0)
         return StreamingResponse(
             buf,
@@ -72,17 +73,15 @@ async def merge_pdf(files: List[UploadFile] = File(...)):
     if len(files) < 2:
         raise HTTPException(400, detail="Minimum 2 fichiers PDF requis")
 
-    merger = fitz.open()
+    merger = PdfMerger()
     for file in files:
         if not file.filename.lower().endswith('.pdf'):
             continue
         content = await file.read()
-        doc = fitz.open(stream=content, filetype="pdf")
-        merger.insert_pdf(doc)
-        doc.close()
+        merger.append(io.BytesIO(content))
 
     output = io.BytesIO()
-    merger.save(output)
+    merger.write(output)
     merger.close()
     output.seek(0)
 
