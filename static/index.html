@@ -7,36 +7,71 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        .drop-zone { transition: all 0.3s ease; }
-        .drop-zone.dragover { background-color: #f3e8ff; border-color: #7c3aed; transform: scale(1.02); }
+        .tool-card {
+            transition: all 0.3s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-    <div class="max-w-6xl mx-auto py-8 px-6">
-        <div class="flex justify-between items-center mb-10">
-            <h1 onclick="window.location.href='/'" class="text-4xl font-bold cursor-pointer">replygen.ca</h1>
-            <a href="/" class="text-purple-600 hover:underline">Accueil</a>
+    <div class="max-w-6xl mx-auto py-12 px-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-12">
+            <h1 onclick="window.location.href='/'" class="text-4xl font-bold cursor-pointer text-gray-900">replygen.ca</h1>
         </div>
 
-        <div id="tool-content">
-            <!-- HEIC (Accueil) -->
-            <div class="text-center">
-                <h2 class="text-5xl font-bold mb-4">Outil Tout-en-Un</h2>
-                <p class="text-xl text-gray-600">Choisis ton outil ci-dessous</p>
-            </div>
+        <div class="text-center mb-16">
+            <h2 class="text-5xl font-bold text-gray-900 mb-4">Outil Tout-en-Un</h2>
+            <p class="text-xl text-gray-600">Choisis l'outil dont tu as besoin</p>
+        </div>
+
+        <!-- Outils -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            
+            <!-- HEIC -->
+            <a href="/" class="tool-card bg-white rounded-3xl p-10 text-center border border-purple-100 hover:border-purple-500">
+                <div class="w-20 h-20 mx-auto bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-image text-5xl text-purple-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">HEIC → PNG/JPG</h3>
+                <p class="text-gray-600">Conversion rapide avec transparence</p>
+            </a>
+
+            <!-- Fusion PDF -->
+            <a href="/merge-pdf" class="tool-card bg-white rounded-3xl p-10 text-center border border-red-100 hover:border-red-500">
+                <div class="w-20 h-20 mx-auto bg-red-100 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-file-pdf text-5xl text-red-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">Fusionner PDF</h3>
+                <p class="text-gray-600">Combiner plusieurs fichiers PDF</p>
+            </a>
+
+            <!-- PDF to Word -->
+            <a href="/pdf-to-word" class="tool-card bg-white rounded-3xl p-10 text-center border border-blue-100 hover:border-blue-500">
+                <div class="w-20 h-20 mx-auto bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-file-word text-5xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">PDF → Word</h3>
+                <p class="text-gray-600">Document Word éditable</p>
+            </a>
+
+            <!-- Compress PDF -->
+            <a href="/compress-pdf" class="tool-card bg-white rounded-3xl p-10 text-center border border-amber-100 hover:border-amber-500">
+                <div class="w-20 h-20 mx-auto bg-amber-100 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-compress-alt text-5xl text-amber-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-2">Compresser PDF</h3>
+                <p class="text-gray-600">Réduire la taille du fichier</p>
+            </a>
+        </div>
+
+        <div class="text-center mt-16 text-sm text-gray-500">
+            🔒 Vos fichiers sont supprimés automatiquement après traitement<br>
+            Confidentialité garantie
         </div>
     </div>
-
-    <script>
-        // Navigation simple
-        document.querySelectorAll('a[href^="/"]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (this.getAttribute('href') !== '/') {
-                    e.preventDefault();
-                    alert("Page en cours de développement. Le backend est prêt, on va ajouter le frontend complet pour chaque outil.");
-                }
-            });
-        });
-    </script>
 </body>
 </html>
