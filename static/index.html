@@ -6,46 +6,45 @@
     <title>Outil Tout-en-Un - replygen.ca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .drop-zone { transition: all 0.3s; }
+        .drop-zone.dragover { background-color: #f3e8ff; border-color: #7c3aed; }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <div class="max-w-6xl mx-auto py-12 px-6">
-        <div class="flex justify-between items-center mb-12">
-            <h1 class="text-4xl font-bold">replygen.ca</h1>
-            <div class="flex gap-2">
-                <a href="/" class="px-5 py-2 bg-purple-600 text-white rounded-2xl">Accueil</a>
-            </div>
+<body class="bg-gray-50">
+    <div class="max-w-6xl mx-auto py-8 px-6">
+        <div class="flex justify-between items-center mb-10">
+            <h1 onclick="window.location.href='/'" class="text-4xl font-bold cursor-pointer text-gray-900">replygen.ca</h1>
         </div>
 
-        <div class="text-center mb-16">
-            <h2 class="text-5xl font-bold text-gray-900">Outil Tout-en-Un</h2>
-            <p class="text-xl text-gray-600 mt-4">Choisis l'outil dont tu as besoin</p>
+        <div class="text-center mb-12">
+            <h2 class="text-5xl font-bold">Outil Tout-en-Un</h2>
+            <p class="text-gray-600 mt-3">Choisis ton outil</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <a href="/" class="group bg-white p-10 rounded-3xl shadow hover:shadow-xl transition text-center">
-                <i class="fas fa-image text-6xl text-purple-500 mb-6"></i>
-                <h3 class="text-2xl font-semibold">HEIC → PNG/JPG</h3>
-                <p class="text-gray-500 mt-3">Conversion rapide iPhone</p>
+        <!-- Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="/" class="block bg-white rounded-3xl p-8 text-center hover:shadow-xl transition">
+                <i class="fas fa-image text-6xl text-purple-500 mb-4"></i>
+                <h3 class="font-semibold text-xl">HEIC → PNG/JPG</h3>
             </a>
-
-            <a href="/merge-pdf" class="group bg-white p-10 rounded-3xl shadow hover:shadow-xl transition text-center">
-                <i class="fas fa-file-pdf text-6xl text-red-500 mb-6"></i>
-                <h3 class="text-2xl font-semibold">Fusionner PDF</h3>
-                <p class="text-gray-500 mt-3">Combiner plusieurs PDF</p>
+            <a href="/merge-pdf" class="block bg-white rounded-3xl p-8 text-center hover:shadow-xl transition">
+                <i class="fas fa-file-pdf text-6xl text-red-500 mb-4"></i>
+                <h3 class="font-semibold text-xl">Fusionner PDF</h3>
             </a>
-
-            <a href="/pdf-to-word" class="group bg-white p-10 rounded-3xl shadow hover:shadow-xl transition text-center">
-                <i class="fas fa-file-word text-6xl text-blue-600 mb-6"></i>
-                <h3 class="text-2xl font-semibold">PDF → Word</h3>
-                <p class="text-gray-500 mt-3">Document éditable</p>
+            <a href="/pdf-to-word" class="block bg-white rounded-3xl p-8 text-center hover:shadow-xl transition">
+                <i class="fas fa-file-word text-6xl text-blue-600 mb-4"></i>
+                <h3 class="font-semibold text-xl">PDF → Word</h3>
             </a>
-
-            <a href="/compress-pdf" class="group bg-white p-10 rounded-3xl shadow hover:shadow-xl transition text-center">
-                <i class="fas fa-compress text-6xl text-amber-500 mb-6"></i>
-                <h3 class="text-2xl font-semibold">Compresser PDF</h3>
-                <p class="text-gray-500 mt-3">Réduire la taille</p>
+            <a href="/compress-pdf" class="block bg-white rounded-3xl p-8 text-center hover:shadow-xl transition">
+                <i class="fas fa-compress text-6xl text-amber-500 mb-4"></i>
+                <h3 class="font-semibold text-xl">Compresser PDF</h3>
             </a>
         </div>
     </div>
+
+    <script>
+        console.log("%cOutil Tout-en-Un chargé avec succès", "color: purple; font-weight: bold");
+    </script>
 </body>
 </html>
