@@ -25,7 +25,7 @@
             <p id="drop-text" class="text-2xl font-medium">Dépose tes photos HEIC ici</p>
             <p id="drop-subtext" class="text-gray-500 mt-2">ou clique pour sélectionner</p>
             
-            <div id="selected-files" class="hidden w-full mt-8 text-left"></div>
+            <div id="selected-files" class="hidden w-full mt-8 text-left max-h-48 overflow-y-auto"></div>
             
             <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
         </div>
@@ -33,15 +33,15 @@
         <!-- Barre de progression -->
         <div id="progress-area" class="hidden mt-10">
             <div class="flex justify-between text-sm mb-3">
-                <span id="status-text" class="font-medium text-purple-700">Conversion en cours...</span>
+                <span id="status-text" class="font-medium">Conversion en cours...</span>
                 <span id="progress-percent">0%</span>
             </div>
             <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all duration-300"></div>
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all"></div>
             </div>
-            <p class="text-center text-xs text-gray-500 mt-4">Cela peut prendre 15 à 45 secondes</p>
         </div>
 
+        <!-- Bouton Convertir -->
         <button onclick="convertHEIC()" id="convert-btn"
                 class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
             Convertir maintenant
@@ -66,11 +66,7 @@
         dropZone.addEventListener('click', () => fileInput.click());
         dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
         dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-        dropZone.addEventListener('drop', e => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            handleFiles(e.dataTransfer.files);
-        });
+        dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
 
         fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
@@ -79,13 +75,16 @@
             if (selectedFiles.length === 0) return;
 
             let html = `<p class="font-medium mb-2">Fichiers sélectionnés (${selectedFiles.length}) :</p>`;
-            selectedFiles.forEach(f => html += `<div class="text-sm py-1">✅ ${f.name}</div>`);
+            selectedFiles.forEach(f => {
+                html += `<div class="text-sm text-gray-700 py-1">✅ ${f.name}</div>`;
+            });
             selectedFilesDiv.innerHTML = html;
             selectedFilesDiv.classList.remove('hidden');
 
-            dropText.textContent = "Fichiers prêts à convertir";
+            dropText.textContent = "Prêt à convertir !";
             dropSubtext.textContent = "Clique sur le bouton ci-dessous";
-            dropIcon.classList.add('text-green-500');
+            dropIcon.classList.remove('fa-cloud-upload-alt');
+            dropIcon.classList.add('fa-check-circle', 'text-green-500');
         }
 
         async function convertHEIC() {
@@ -96,11 +95,11 @@
 
             let progress = 0;
             const interval = setInterval(() => {
-                progress += Math.random() * 25 + 15;
+                progress += Math.random() * 22 + 12;
                 if (progress > 92) progress = 92;
                 progressBar.style.width = `${progress}%`;
                 progressPercent.textContent = `${Math.round(progress)}%`;
-            }, 400);
+            }, 380);
 
             try {
                 const formData = new FormData();
@@ -122,7 +121,7 @@
                 a.click();
 
                 setTimeout(() => {
-                    alert("✅ Conversion terminée avec succès ! Le fichier a été téléchargé.");
+                    alert("✅ Conversion terminée et fichier téléchargé avec succès !");
                     resetUI();
                 }, 1000);
 
@@ -139,7 +138,8 @@
             fileInput.value = '';
             dropText.textContent = "Dépose tes photos HEIC ici";
             dropSubtext.textContent = "ou clique pour sélectionner";
-            dropIcon.classList.remove('text-green-500');
+            dropIcon.classList.add('fa-cloud-upload-alt');
+            dropIcon.classList.remove('fa-check-circle', 'text-green-500');
         }
     </script>
 </body>
