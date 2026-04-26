@@ -9,7 +9,6 @@ from PIL import Image
 from pillow_heif import register_heif_opener, open_heif
 import fitz  # PyMuPDF
 from docx import Document
-from pypdf import PdfMerger
 
 register_heif_opener()
 
@@ -42,7 +41,6 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
         img = heif_file.to_pillow()
         converted_images.append(img)
 
-    # Plusieurs fichiers → ZIP
     if len(converted_images) > 1:
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, "w") as zip_file:
@@ -57,7 +55,6 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
             headers={"Content-Disposition": "attachment; filename=heic_converted.zip"}
         )
     else:
-        # Un seul fichier
         buf = io.BytesIO()
         converted_images[0].save(buf, format=format.upper(), quality=95)
         buf.seek(0)
@@ -67,21 +64,23 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
             headers={"Content-Disposition": f"attachment; filename=converted.{format}"}
         )
 
-# ==================== FUSION PDF ====================
+# ==================== FUSION PDF (avec fitz - plus stable) ====================
 @app.post("/merge-pdf")
 async def merge_pdf(files: List[UploadFile] = File(...)):
     if len(files) < 2:
         raise HTTPException(400, detail="Minimum 2 fichiers PDF requis")
 
-    merger = PdfMerger()
+    merger = fitz.open()
     for file in files:
         if not file.filename.lower().endswith('.pdf'):
             continue
         content = await file.read()
-        merger.append(io.BytesIO(content))
+        doc = fitz.open(stream=content, filetype="pdf")
+        merger.insert_pdf(doc)
+        doc.close()
 
     output = io.BytesIO()
-    merger.write(output)
+    merger.save(output)
     merger.close()
     output.seek(0)
 
