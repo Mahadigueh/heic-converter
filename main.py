@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import List
 import fitz  # PyMuPDF
 from docx import Document
-from pypdf import PdfMerger, PdfReader, PdfWriter
+from pypdf import PdfMerger, PdfReader, PdfWriter  # Correction ici
 
 register_heif_opener()
 
@@ -30,12 +30,6 @@ app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 async def home():
     with open("static/index.html", "r", encoding="utf-8") as f:
         return f.read()
-
-# ==================== HEIC ====================
-@app.post("/convert-heic")
-async def convert_heic(files: List[UploadFile] = File(...), format: str = "png"):
-    # ... (ton code HEIC précédent, je peux le remettre si besoin)
-    pass  # Je te le remettrai complet si tu veux
 
 # ==================== FUSION PDF ====================
 @app.post("/merge-pdf")
@@ -57,7 +51,7 @@ async def merge_pdf(files: List[UploadFile] = File(...)):
     return StreamingResponse(
         output,
         media_type="application/pdf",
-        headers={"Content-Disposition": 'attachment; filename="merged_document.pdf"'}
+        headers={"Content-Disposition": 'attachment; filename="document_fusionne.pdf"'}
     )
 
 # ==================== PDF TO WORD ====================
