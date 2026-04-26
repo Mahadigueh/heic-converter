@@ -19,134 +19,58 @@
         </div>
 
         <div id="main-content">
-            <!-- Menu principal -->
-            <div id="home-page" class="text-center">
-                <h2 class="text-5xl font-bold mb-4">Outil Tout-en-Un</h2>
-                <p class="text-xl text-gray-600">Choisis l'outil dont tu as besoin</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
-                    <a onclick="showTool('heic')" class="cursor-pointer bg-white rounded-3xl p-10 text-center hover:shadow-xl border border-purple-100 hover:border-purple-500">
-                        <i class="fas fa-image text-6xl text-purple-500 mb-6"></i>
-                        <h3 class="text-2xl font-semibold">HEIC → PNG/JPG</h3>
-                    </a>
-                    <a onclick="showTool('merge')" class="cursor-pointer bg-white rounded-3xl p-10 text-center hover:shadow-xl border border-red-100 hover:border-red-500">
-                        <i class="fas fa-file-pdf text-6xl text-red-500 mb-6"></i>
-                        <h3 class="text-2xl font-semibold">Fusionner PDF</h3>
-                    </a>
-                    <a onclick="showTool('pdfword')" class="cursor-pointer bg-white rounded-3xl p-10 text-center hover:shadow-xl border border-blue-100 hover:border-blue-500">
-                        <i class="fas fa-file-word text-6xl text-blue-600 mb-6"></i>
-                        <h3 class="text-2xl font-semibold">PDF → Word</h3>
-                    </a>
-                    <a onclick="showTool('compress')" class="cursor-pointer bg-white rounded-3xl p-10 text-center hover:shadow-xl border border-amber-100 hover:border-amber-500">
-                        <i class="fas fa-compress text-6xl text-amber-500 mb-6"></i>
-                        <h3 class="text-2xl font-semibold">Compresser PDF</h3>
-                    </a>
+            <!-- HEIC - Page par défaut -->
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-4xl font-bold text-center mb-8">HEIC → PNG / JPG</h2>
+                <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-20 text-center cursor-pointer bg-white">
+                    <i class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
+                    <p class="text-2xl font-medium">Dépose tes photos HEIC ici</p>
+                    <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
                 </div>
+                <button onclick="convertHEIC()" class="mt-10 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">Convertir</button>
             </div>
         </div>
     </div>
 
     <script>
         function goHome() {
-            document.getElementById('main-content').innerHTML = document.getElementById('home-page').innerHTML;
+            window.location.reload();
         }
 
-        function showTool(tool) {
-            let html = '';
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
 
-            if (tool === 'merge') {
-                html = `
-                    <div class="max-w-2xl mx-auto">
-                        <h2 class="text-4xl font-bold text-center mb-8">Fusionner des PDF</h2>
-                        <div id="drop-merge" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-20 text-center cursor-pointer bg-white">
-                            <i class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
-                            <p class="text-2xl font-medium">Dépose tes fichiers PDF ici</p>
-                            <p class="text-gray-500 mt-4">Minimum 2 fichiers</p>
-                            <input type="file" id="file-merge" multiple accept=".pdf" class="hidden">
-                        </div>
-                        <button onclick="startMerge()" class="mt-10 w-full bg-red-600 hover:bg-red-700 text-white py-6 rounded-3xl text-xl font-semibold">Fusionner les fichiers</button>
-                    </div>`;
-            } else if (tool === 'pdfword') {
-                html = `
-                    <div class="max-w-2xl mx-auto">
-                        <h2 class="text-4xl font-bold text-center mb-8">PDF → Word</h2>
-                        <div id="drop-pdfword" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-20 text-center cursor-pointer bg-white">
-                            <i class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
-                            <p class="text-2xl font-medium">Dépose ton fichier PDF</p>
-                            <input type="file" id="file-pdfword" accept=".pdf" class="hidden">
-                        </div>
-                        <button onclick="startPdfToWord()" class="mt-10 w-full bg-blue-600 hover:bg-blue-700 text-white py-6 rounded-3xl text-xl font-semibold">Convertir en Word</button>
-                    </div>`;
-            } else if (tool === 'compress') {
-                html = `
-                    <div class="max-w-2xl mx-auto">
-                        <h2 class="text-4xl font-bold text-center mb-8">Compresser PDF</h2>
-                        <div id="drop-compress" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-20 text-center cursor-pointer bg-white">
-                            <i class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
-                            <p class="text-2xl font-medium">Dépose ton fichier PDF</p>
-                            <input type="file" id="file-compress" accept=".pdf" class="hidden">
-                        </div>
-                        <button onclick="startCompress()" class="mt-10 w-full bg-amber-600 hover:bg-amber-700 text-white py-6 rounded-3xl text-xl font-semibold">Compresser le PDF</button>
-                    </div>`;
-            }
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+        });
 
-            document.getElementById('main-content').innerHTML = html;
-            setupDropZones();
-        }
+        async function convertHEIC() {
+            const files = fileInput.files;
+            if (files.length === 0) return alert("Sélectionne au moins une photo HEIC");
 
-        function setupDropZones() {
-            document.querySelectorAll('.drop-zone').forEach(zone => {
-                zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-                zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-                zone.addEventListener('drop', e => {
-                    e.preventDefault();
-                    zone.classList.remove('dragover');
-                    const files = e.dataTransfer.files;
-                    zone.querySelector('input').files = files;
-                });
-                zone.addEventListener('click', () => zone.querySelector('input').click());
-            });
-        }
-
-        async function startMerge() {
-            const files = document.getElementById('file-merge').files;
-            if (files.length < 2) return alert("Sélectionne au moins 2 fichiers PDF");
-            await uploadFiles('/merge-pdf', files);
-        }
-
-        async function startPdfToWord() {
-            const files = document.getElementById('file-pdfword').files;
-            if (files.length === 0) return alert("Sélectionne un fichier PDF");
-            await uploadFiles('/pdf-to-word', files);
-        }
-
-        async function startCompress() {
-            const files = document.getElementById('file-compress').files;
-            if (files.length === 0) return alert("Sélectionne un fichier PDF");
-            await uploadFiles('/compress-pdf', files);
-        }
-
-        async function uploadFiles(endpoint, files) {
             const formData = new FormData();
             for (let file of files) formData.append('files', file);
+            formData.append('format', 'png');
 
             try {
-                const res = await fetch(endpoint, { method: 'POST', body: formData });
-                if (!res.ok) throw new Error("Erreur serveur");
-                
+                const res = await fetch('/convert-heic', { method: 'POST', body: formData });
+                if (!res.ok) throw new Error("Erreur");
+
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = endpoint.includes('word') ? 'document.docx' : 'result.pdf';
+                a.download = files.length > 1 ? "heic_converted.zip" : "converted.png";
                 a.click();
             } catch (e) {
-                alert("Erreur lors du traitement : " + e.message);
+                alert("Erreur lors de la conversion");
             }
         }
-
-        // Initialisation
-        setupDropZones();
     </script>
 </body>
 </html>
