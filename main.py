@@ -3,17 +3,22 @@ from fastapi.responses import StreamingResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import io
-from PIL import Image
-from pillow_heif import register_heif_opener, open_heif
-import os
-import zipfile
-from datetime import datetime
 from typing import List
 import fitz  # PyMuPDF
 from docx import Document
-from pypdf import PdfMerger, PdfReader, PdfWriter  # Correction ici
+from pypdf import PdfReader, PdfWriter  # On enlève PdfMerger temporairement
 
-register_heif_opener()
+# Pour la fusion, on utilise fitz (plus stable)
+def merge_pdfs_with_fitz(files):
+    merger = fitz.open()
+    for file in files:
+        if not file.filename.lower().endswith('.pdf'):
+            continue
+        content = file.file.read()
+        doc = fitz.open(stream=content, filetype="pdf")
+        merger.insert_pdf(doc)
+        doc.close()
+    return merger
 
 app = FastAPI(title="Outil Tout-en-Un - replygen.ca")
 
@@ -31,21 +36,16 @@ async def home():
     with open("static/index.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# ==================== FUSION PDF ====================
+# ==================== FUSION PDF (avec fitz) ====================
 @app.post("/merge-pdf")
 async def merge_pdf(files: List[UploadFile] = File(...)):
     if len(files) < 2:
         raise HTTPException(400, detail="Vous devez envoyer au moins 2 fichiers PDF")
 
-    merger = PdfMerger()
-    for file in files:
-        if not file.filename.lower().endswith('.pdf'):
-            continue
-        content = await file.read()
-        merger.append(io.BytesIO(content))
-
+    merger = merge_pdfs_with_fitz(files)
     output = io.BytesIO()
-    merger.write(output)
+    merger.save(output)
+    merger.close()
     output.seek(0)
 
     return StreamingResponse(
