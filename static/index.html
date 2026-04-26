@@ -3,76 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="title">Outil Tout-en-Un - replygen.ca</title>
+    <title>Outil Tout-en-Un - replygen.ca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         .tool-card { transition: all 0.3s ease; }
-        .tool-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .tool-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <div class="max-w-5xl mx-auto py-12 px-6">
+<body class="bg-gray-50">
+    <div class="max-w-6xl mx-auto py-12 px-6">
         <div class="text-center mb-12">
-            <h1 class="text-5xl font-bold text-gray-900 mb-4" data-i18n="main_title">Outil Tout-en-Un</h1>
-            <p class="text-xl text-gray-600" data-i18n="subtitle">Convertisseur HEIC, PDF, Word et plus encore</p>
+            <h1 class="text-5xl font-bold text-gray-900 mb-3">Outil Tout-en-Un</h1>
+            <p class="text-xl text-gray-600">HEIC • PDF • Word • et plus encore</p>
         </div>
 
-        <!-- Navigation des outils -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             <!-- HEIC -->
-            <a href="/" class="tool-card bg-white rounded-3xl shadow-md p-8 text-center border-2 border-purple-200 hover:border-purple-500">
-                <i class="fas fa-image text-5xl text-purple-500 mb-4"></i>
-                <h3 class="text-2xl font-semibold mb-2" data-i18n="heic_title">HEIC → PNG/JPG</h3>
-                <p class="text-gray-600" data-i18n="heic_desc">Convertisseur HEIC rapide avec transparence</p>
+            <a href="/" class="tool-card bg-white rounded-3xl p-8 text-center border border-purple-200 hover:border-purple-600">
+                <i class="fas fa-image text-6xl text-purple-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-2">HEIC → PNG/JPG</h3>
+                <p class="text-gray-600">Conversion rapide avec transparence</p>
             </a>
 
             <!-- Fusion PDF -->
-            <a href="/merge-pdf" class="tool-card bg-white rounded-3xl shadow-md p-8 text-center border-2 border-blue-200 hover:border-blue-500">
-                <i class="fas fa-file-pdf text-5xl text-red-500 mb-4"></i>
-                <h3 class="text-2xl font-semibold mb-2" data-i18n="merge_title">Fusionner PDF</h3>
-                <p class="text-gray-600" data-i18n="merge_desc">Combiner plusieurs PDF en un seul</p>
+            <a href="/merge-pdf" class="tool-card bg-white rounded-3xl p-8 text-center border border-red-200 hover:border-red-600">
+                <i class="fas fa-file-pdf text-6xl text-red-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-2">Fusionner PDF</h3>
+                <p class="text-gray-600">Combiner plusieurs fichiers PDF</p>
             </a>
 
             <!-- PDF to Word -->
-            <a href="/pdf-to-word" class="tool-card bg-white rounded-3xl shadow-md p-8 text-center border-2 border-emerald-200 hover:border-emerald-500">
-                <i class="fas fa-file-word text-5xl text-blue-600 mb-4"></i>
-                <h3 class="text-2xl font-semibold mb-2" data-i18n="pdfword_title">PDF → Word</h3>
-                <p class="text-gray-600" data-i18n="pdfword_desc">Convertir PDF en document Word éditable</p>
+            <a href="/pdf-to-word" class="tool-card bg-white rounded-3xl p-8 text-center border border-blue-200 hover:border-blue-600">
+                <i class="fas fa-file-word text-6xl text-blue-600 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-2">PDF → Word</h3>
+                <p class="text-gray-600">Convertir en document éditable</p>
             </a>
 
             <!-- Compress PDF -->
-            <a href="/compress-pdf" class="tool-card bg-white rounded-3xl shadow-md p-8 text-center border-2 border-amber-200 hover:border-amber-500">
-                <i class="fas fa-compress text-5xl text-amber-500 mb-4"></i>
-                <h3 class="text-2xl font-semibold mb-2" data-i18n="compress_title">Compresser PDF</h3>
-                <p class="text-gray-600" data-i18n="compress_desc">Réduire la taille de vos fichiers PDF</p>
+            <a href="/compress-pdf" class="tool-card bg-white rounded-3xl p-8 text-center border border-amber-200 hover:border-amber-600">
+                <i class="fas fa-compress-alt text-6xl text-amber-500 mb-6"></i>
+                <h3 class="text-2xl font-bold mb-2">Compresser PDF</h3>
+                <p class="text-gray-600">Réduire la taille du fichier</p>
             </a>
         </div>
 
-        <div class="text-center mt-16 text-sm text-gray-500">
-            🔒 Tous vos fichiers sont supprimés automatiquement après traitement
+        <div class="mt-16 text-center text-sm text-gray-500">
+            🔒 Vos fichiers sont supprimés automatiquement après le traitement<br>
+            <span class="text-xs">Confidentialité garantie</span>
         </div>
     </div>
-
-    <script>
-        // Traductions de base (à compléter plus tard)
-        const translations = {
-            fr: {
-                main_title: "Outil Tout-en-Un",
-                subtitle: "Convertisseur HEIC, PDF, Word et plus encore",
-                heic_title: "HEIC → PNG/JPG",
-                heic_desc: "Convertisseur HEIC rapide avec transparence",
-                merge_title: "Fusionner PDF",
-                merge_desc: "Combiner plusieurs PDF en un seul",
-                pdfword_title: "PDF → Word",
-                pdfword_desc: "Convertir PDF en document Word éditable",
-                compress_title: "Compresser PDF",
-                compress_desc: "Réduire la taille de vos fichiers PDF"
-            },
-            en: { /* ... */ },
-            es: { /* ... */ }
-        };
-    </script>
 </body>
 </html>
