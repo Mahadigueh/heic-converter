@@ -30,18 +30,18 @@
             <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
         </div>
 
-        <!-- Barre de progression -->
+        <!-- Barre de progression améliorée -->
         <div id="progress-area" class="hidden mt-10">
             <div class="flex justify-between text-sm mb-3">
-                <span id="status-text" class="font-medium">Conversion en cours...</span>
+                <span id="status-text" class="font-medium text-purple-700">Conversion en cours...</span>
                 <span id="progress-percent">0%</span>
             </div>
             <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all"></div>
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all duration-300"></div>
             </div>
+            <p class="text-center text-xs text-gray-500 mt-4">Cela peut prendre 15 à 45 secondes selon le nombre de photos</p>
         </div>
 
-        <!-- Bouton Convertir -->
         <button onclick="convertHEIC()" id="convert-btn"
                 class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
             Convertir maintenant
@@ -81,7 +81,7 @@
             selectedFilesDiv.innerHTML = html;
             selectedFilesDiv.classList.remove('hidden');
 
-            dropText.textContent = "Prêt à convertir !";
+            dropText.textContent = "Fichiers prêts à convertir";
             dropSubtext.textContent = "Clique sur le bouton ci-dessous";
             dropIcon.classList.remove('fa-cloud-upload-alt');
             dropIcon.classList.add('fa-check-circle', 'text-green-500');
@@ -95,11 +95,11 @@
 
             let progress = 0;
             const interval = setInterval(() => {
-                progress += Math.random() * 22 + 12;
-                if (progress > 92) progress = 92;
+                progress += Math.random() * 25 + 15;
+                if (progress > 93) progress = 93;
                 progressBar.style.width = `${progress}%`;
                 progressPercent.textContent = `${Math.round(progress)}%`;
-            }, 380);
+            }, 350);
 
             try {
                 const formData = new FormData();
@@ -111,7 +111,7 @@
                 clearInterval(interval);
                 progressBar.style.width = '100%';
                 progressPercent.textContent = '100%';
-                statusText.textContent = 'Terminé ! Téléchargement...';
+                statusText.textContent = 'Terminé ! Téléchargement en cours...';
 
                 const blob = await res.blob();
                 const url = URL.createObjectURL(blob);
@@ -121,12 +121,12 @@
                 a.click();
 
                 setTimeout(() => {
-                    alert("✅ Conversion terminée et fichier téléchargé avec succès !");
+                    alert("✅ Conversion terminée avec succès !\nLe fichier a été téléchargé.");
                     resetUI();
-                }, 1000);
+                }, 1200);
 
             } catch (err) {
-                alert("Erreur lors de la conversion.");
+                alert("Erreur lors de la conversion. Réessaie.");
                 resetUI();
             }
         }
