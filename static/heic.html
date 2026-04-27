@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nom de l'outil - replygen.ca</title>
+    <title>HEIC → PNG/JPG - replygen.ca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -12,18 +12,57 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-    <div class="max-w-2xl mx-auto py-8 px-6">
-        <!-- Navigation commune -->
-        <div class="flex justify-between items-center mb-10 pb-6 border-b">
-            <h1 onclick="window.location.href='/'" class="text-4xl font-bold cursor-pointer text-gray-900">replygen.ca</h1>
-            <div class="flex gap-2 text-sm">
-                <a href="/" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">Accueil</a>
-                <a href="/heic" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">HEIC</a>
-                <a href="/merge" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">Fusion PDF</a>
-                <a href="/pdf-to-word" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">PDF → Word</a>
-                <a href="/compress" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">Compress PDF</a>
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
+            <h1 onclick="window.location.href='/'" 
+                class="text-3xl font-bold cursor-pointer text-gray-900 hover:text-purple-600">
+                replygen.ca
+            </h1>
+            
+            <div class="flex items-center gap-2 text-sm font-medium">
+                <a href="/" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Accueil</a>
+                <a href="/heic" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">HEIC</a>
+                <a href="/merge" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Fusion PDF</a>
+                <a href="/pdf-to-word" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">PDF → Word</a>
+                <a href="/compress" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Compresser PDF</a>
             </div>
         </div>
+    </nav>
+    <div class="max-w-2xl mx-auto py-12 px-6">
+        <h1 onclick="window.location.href='/'" class="text-4xl font-bold text-center cursor-pointer mb-10 text-gray-900">replygen.ca</h1>
+        
+        <div class="text-center mb-10">
+            <h2 class="text-5xl font-bold">HEIC → PNG / JPG</h2>
+            <p class="text-gray-600 mt-3">Convertisseur rapide pour photos iPhone</p>
+        </div>
+
+        <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-16 text-center cursor-pointer bg-white">
+            <i id="drop-icon" class="fas fa-cloud-upload-alt text-7xl text-gray-400 mb-6"></i>
+            <p id="drop-text" class="text-2xl font-medium">Dépose tes photos HEIC ici</p>
+            <p id="drop-subtext" class="text-gray-500 mt-2">ou clique pour sélectionner</p>
+            
+            <div id="selected-files" class="hidden w-full mt-8 text-left max-h-48 overflow-y-auto"></div>
+            
+            <input type="file" id="file-input" accept=".heic,.heif" multiple class="hidden">
+        </div>
+
+        <!-- Barre de progression -->
+        <div id="progress-area" class="hidden mt-10">
+            <div class="flex justify-between text-sm mb-3">
+                <span id="status-text" class="font-medium text-purple-700">Conversion en cours...</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-600 to-violet-600 w-0 transition-all"></div>
+            </div>
+        </div>
+
+        <button onclick="convertHEIC()" id="convert-btn"
+                class="mt-8 w-full bg-purple-600 hover:bg-purple-700 text-white py-6 rounded-3xl text-xl font-semibold">
+            Convertir maintenant
+        </button>
+    </div>
+
     <script>
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
