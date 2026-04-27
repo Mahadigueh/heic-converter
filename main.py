@@ -12,7 +12,7 @@ from docx import Document
 
 register_heif_opener()
 
-app = FastAPI(title="replygen.ca")
+app = FastAPI(title="Replygen - Outil Tout-en-Un")
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,7 +23,7 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# ====================== PAGES ======================
+# ====================== PAGES HTML ======================
 @app.get("/", response_class=HTMLResponse)
 async def home():
     with open("static/index.html", "r", encoding="utf-8") as f:
@@ -49,7 +49,17 @@ async def compress_page():
     with open("static/compress.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# ====================== HEIC ======================
+@app.get("/about", response_class=HTMLResponse)
+async def about_page():
+    with open("static/about.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/privacy", response_class=HTMLResponse)
+async def privacy_page():
+    with open("static/privacy.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+# ====================== CONVERSIONS ======================
 @app.post("/convert-heic")
 async def convert_heic(files: List[UploadFile] = File(...), format: str = "png"):
     if not files:
@@ -85,7 +95,6 @@ async def convert_heic(files: List[UploadFile] = File(...), format: str = "png")
             headers={"Content-Disposition": f"attachment; filename=converted.{format}"}
         )
 
-# ====================== FUSION PDF ======================
 @app.post("/merge-pdf")
 async def merge_pdf(files: List[UploadFile] = File(...)):
     if len(files) < 2:
@@ -111,7 +120,6 @@ async def merge_pdf(files: List[UploadFile] = File(...)):
         headers={"Content-Disposition": 'attachment; filename="document_fusionne.pdf"'}
     )
 
-# ====================== PDF TO WORD ======================
 @app.post("/pdf-to-word")
 async def pdf_to_word(file: UploadFile = File(...)):
     if not file.filename.lower().endswith('.pdf'):
@@ -135,7 +143,6 @@ async def pdf_to_word(file: UploadFile = File(...)):
         headers={"Content-Disposition": f'attachment; filename="{file.filename.replace(".pdf", "")}.docx"'}
     )
 
-# ====================== COMPRESS PDF ======================
 @app.post("/compress-pdf")
 async def compress_pdf(file: UploadFile = File(...)):
     if not file.filename.lower().endswith('.pdf'):
