@@ -23,7 +23,7 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Pages HTML avec URLs propres
+# === Pages HTML ===
 @app.get("/", response_class=HTMLResponse)
 async def home():
     with open("static/index.html", "r", encoding="utf-8") as f:
@@ -49,29 +49,28 @@ async def compress_page():
     with open("static/compress.html", "r", encoding="utf-8") as f:
         return f.read()
 
-# ==================== HEIC ====================
+# === Endpoints de conversion ===
 @app.post("/convert-heic")
 async def convert_heic(files: List[UploadFile] = File(...), format: str = "png"):
-    # (ton code HEIC actuel)
+    # Ton code HEIC actuel
     if not files:
         raise HTTPException(400, detail="Aucun fichier envoyé")
     # ... (le reste de ton code HEIC)
-    pass  # Remplace par ton code HEIC complet si besoin
+    pass
 
-# ==================== Autres endpoints (déjà existants) ====================
 @app.post("/merge-pdf")
 async def merge_pdf(files: List[UploadFile] = File(...)):
-    # ton code actuel
+    # Ton code actuel
     pass
 
 @app.post("/pdf-to-word")
 async def pdf_to_word(file: UploadFile = File(...)):
-    # ton code actuel
+    # Ton code actuel
     pass
 
 @app.post("/compress-pdf")
 async def compress_pdf(file: UploadFile = File(...)):
-    # ton code actuel
+    # Ton code actuel
     pass
 
 @app.get("/health")

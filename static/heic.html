@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEIC → PNG/JPG - replygen.ca</title>
+    <title>Nom de l'outil - replygen.ca</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
@@ -13,18 +13,17 @@
 </head>
 <body class="bg-gray-50 font-sans">
     <div class="max-w-2xl mx-auto py-8 px-6">
-    <!-- Navigation commune -->
-    <div class="flex justify-between items-center mb-10 border-b pb-6">
-        <h1 onclick="window.location.href='/'" class="text-4xl font-bold cursor-pointer text-gray-900">replygen.ca</h1>
-        <div class="flex gap-2 text-sm font-medium">
-            <a href="/" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Accueil</a>
-            <a href="/heic" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">HEIC</a>
-            <a href="/merge" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Fusion PDF</a>
-            <a href="/pdf-to-word" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">PDF → Word</a>
-            <a href="/compress" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Compress PDF</a>
+        <!-- Navigation commune -->
+        <div class="flex justify-between items-center mb-10 pb-6 border-b">
+            <h1 onclick="window.location.href='/'" class="text-4xl font-bold cursor-pointer text-gray-900">replygen.ca</h1>
+            <div class="flex gap-2 text-sm">
+                <a href="/" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">Accueil</a>
+                <a href="/heic" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">HEIC</a>
+                <a href="/merge" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">Fusion PDF</a>
+                <a href="/pdf-to-word" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">PDF → Word</a>
+                <a href="/compress" class="px-4 py-2 hover:bg-gray-100 rounded-2xl">Compress PDF</a>
+            </div>
         </div>
-    </div>
-
     <script>
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
