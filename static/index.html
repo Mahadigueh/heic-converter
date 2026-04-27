@@ -12,36 +12,16 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
-    <div class="max-w-6xl mx-auto py-16 px-6">
-        <div class="text-center mb-16">
-            <h1 class="text-6xl font-bold text-gray-900 mb-4">replygen.ca</h1>
-            <p class="text-2xl text-gray-600">Outil Tout-en-Un de conversion de fichiers</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <a href="/heic" class="tool-card bg-white rounded-3xl p-10 text-center border border-purple-200 hover:border-purple-500">
-                <i class="fas fa-image text-6xl text-purple-500 mb-6"></i>
-                <h3 class="text-2xl font-semibold mb-3">HEIC → PNG/JPG</h3>
-                <p class="text-gray-600">Conversion rapide des photos iPhone</p>
-            </a>
-
-            <a href="/merge" class="tool-card bg-white rounded-3xl p-10 text-center border border-red-200 hover:border-red-500">
-                <i class="fas fa-file-pdf text-6xl text-red-500 mb-6"></i>
-                <h3 class="text-2xl font-semibold mb-3">Fusionner PDF</h3>
-                <p class="text-gray-600">Combiner plusieurs PDF</p>
-            </a>
-
-            <a href="/pdf-to-word" class="tool-card bg-white rounded-3xl p-10 text-center border border-blue-200 hover:border-blue-500">
-                <i class="fas fa-file-word text-6xl text-blue-600 mb-6"></i>
-                <h3 class="text-2xl font-semibold mb-3">PDF → Word</h3>
-                <p class="text-gray-600">Convertir en document éditable</p>
-            </a>
-
-            <a href="/compress" class="tool-card bg-white rounded-3xl p-10 text-center border border-amber-200 hover:border-amber-500">
-                <i class="fas fa-compress text-6xl text-amber-500 mb-6"></i>
-                <h3 class="text-2xl font-semibold mb-3">Compresser PDF</h3>
-                <p class="text-gray-600">Réduire la taille du fichier</p>
-            </a>
+    <div class="max-w-2xl mx-auto py-8 px-6">
+    <!-- Navigation commune -->
+    <div class="flex justify-between items-center mb-10 border-b pb-6">
+        <h1 onclick="window.location.href='/'" class="text-4xl font-bold cursor-pointer text-gray-900">replygen.ca</h1>
+        <div class="flex gap-2 text-sm font-medium">
+            <a href="/" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Accueil</a>
+            <a href="/heic" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">HEIC</a>
+            <a href="/merge" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Fusion PDF</a>
+            <a href="/pdf-to-word" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">PDF → Word</a>
+            <a href="/compress" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Compress PDF</a>
         </div>
     </div>
 </body>
