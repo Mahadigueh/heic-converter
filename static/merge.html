@@ -15,11 +15,9 @@
     <!-- Navigation -->
     <nav class="bg-white border-b sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
-            <h1 onclick="window.location.href='/'" 
-                class="text-3xl font-bold cursor-pointer text-gray-900 hover:text-purple-600">
+            <h1 onclick="window.location.href='/'" class="text-3xl font-bold cursor-pointer text-gray-900 hover:text-purple-600">
                 Replygen
             </h1>
-            
             <div class="flex items-center gap-2 text-sm font-medium">
                 <a href="/" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Accueil</a>
                 <a href="/heic" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">HEIC</a>
@@ -32,14 +30,14 @@
 
     <div class="max-w-2xl mx-auto py-12 px-6">
         <div class="text-center mb-10">
-            <h2 class="text-5xl font-bold">Fusionner PDF</h2>
-            <p class="text-gray-600 mt-3">Combiner plusieurs fichiers PDF en un seul</p>
+            <h2 class="text-5xl font-bold text-gray-900">Fusionner des PDF</h2>
+            <p class="text-xl text-gray-600 mt-4">Combinez plusieurs fichiers PDF en un seul document rapidement</p>
         </div>
 
-        <div id="drop-zone" class="drop-zone border-4 border-dashed border-red-300 rounded-3xl p-16 text-center cursor-pointer bg-white">
-            <i id="drop-icon" class="fas fa-cloud-upload-alt text-7xl text-red-400 mb-6"></i>
-            <p id="drop-text" class="text-2xl font-medium">Dépose tes fichiers PDF ici</p>
-            <p id="drop-subtext" class="text-gray-500 mt-2">Minimum 2 fichiers</p>
+        <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-16 text-center cursor-pointer bg-white">
+            <i id="drop-icon" class="fas fa-file-pdf text-7xl text-red-400 mb-6"></i>
+            <p id="drop-text" class="text-2xl font-medium">Déposez vos fichiers PDF ici</p>
+            <p id="drop-subtext" class="text-gray-500 mt-2">ou cliquez pour sélectionner (minimum 2 fichiers)</p>
             
             <div id="selected-files" class="hidden w-full mt-8 text-left max-h-48 overflow-y-auto"></div>
             
@@ -49,20 +47,79 @@
         <!-- Barre de progression -->
         <div id="progress-area" class="hidden mt-10">
             <div class="flex justify-between text-sm mb-3">
-                <span id="status-text" class="font-medium text-red-700">Fusion en cours...</span>
+                <span id="status-text" class="font-medium text-purple-700">Fusion en cours...</span>
                 <span id="progress-percent">0%</span>
             </div>
             <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
-                <div id="progress-bar" class="h-full bg-gradient-to-r from-red-600 to-rose-600 w-0 transition-all"></div>
+                <div id="progress-bar" class="h-full bg-gradient-to-r from-red-600 to-orange-600 w-0 transition-all"></div>
             </div>
-            <p class="text-center text-xs text-gray-500 mt-4">Cela peut prendre quelques secondes selon le nombre de fichiers</p>
         </div>
 
-        <button onclick="mergePDF()" id="convert-btn"
+        <button onclick="mergePDF()" id="merge-btn"
                 class="mt-8 w-full bg-red-600 hover:bg-red-700 text-white py-6 rounded-3xl text-xl font-semibold">
             Fusionner les PDF
         </button>
+
+        <!-- Description détaillée -->
+        <div class="mt-16 bg-white rounded-3xl p-10">
+            <h3 class="font-semibold text-2xl mb-6">Pourquoi fusionner vos PDF avec Replygen ?</h3>
+            <p class="text-gray-600 mb-8">Regroupez plusieurs documents en un seul fichier professionnel en quelques secondes. Idéal pour contrats, rapports, factures, présentations, etc.</p>
+            
+            <h4 class="font-semibold mb-4">Avantages :</h4>
+            <ul class="list-disc pl-6 space-y-3 text-gray-600">
+                <li>Ordre des fichiers respecté (dans l’ordre de sélection)</li>
+                <li>Qualité originale conservée</li>
+                <li>Aucune limite de taille ou de nombre de fichiers</li>
+                <li>Confidentialité totale : fichiers supprimés après fusion</li>
+                <li>Gratuit et sans inscription</li>
+            </ul>
+        </div>
+
+        <!-- Comment ça marche + FAQ -->
+        <div class="mt-12 bg-white rounded-3xl p-10">
+            <h3 class="font-semibold text-xl mb-6">Comment ça marche ?</h3>
+            <ol class="list-decimal pl-6 space-y-4 text-gray-600">
+                <li>Déposez au moins 2 fichiers PDF</li>
+                <li>Les fichiers apparaissent dans l’ordre sélectionné</li>
+                <li>Cliquez sur "Fusionner les PDF"</li>
+                <li>Téléchargez votre document combiné</li>
+            </ol>
+
+            <h4 class="font-semibold mt-10 mb-4">Questions fréquentes</h4>
+            <div class="space-y-6 text-sm">
+                <div>
+                    <p class="font-medium">L’ordre des pages est-il conservé ?</p>
+                    <p class="text-gray-500">Oui, les fichiers sont fusionnés dans l’ordre où vous les avez sélectionnés.</p>
+                </div>
+                <div>
+                    <p class="font-medium">Quelle est la vitesse de fusion ?</p>
+                    <p class="text-gray-500">Quelques secondes seulement, même pour de gros fichiers.</p>
+                </div>
+                <div>
+                    <p class="font-medium">Mes documents restent-ils privés ?</p>
+                    <p class="text-gray-500">Absolument. Tout est traité sur notre serveur et supprimé immédiatement après.</p>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-20 py-12">
+        <div class="max-w-6xl mx-auto px-6 text-center text-sm text-gray-500">
+            <div class="flex flex-wrap justify-center gap-6 mb-6">
+                <a href="/" class="hover:text-gray-700">Accueil</a>
+                <a href="/heic" class="hover:text-gray-700">HEIC</a>
+                <a href="/merge" class="hover:text-gray-700">Fusion PDF</a>
+                <a href="/pdf-to-word" class="hover:text-gray-700">PDF → Word</a>
+                <a href="/compress" class="hover:text-gray-700">Compresser PDF</a>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 text-xs mt-6">
+                <a href="/about" class="hover:text-gray-700">À propos</a>
+                <a href="/privacy" class="hover:text-gray-700">Politique de Confidentialité</a>
+            </div>
+            <p class="mt-8">&copy; 2026 Replygen - Tous droits réservés</p>
+        </div>
+    </footer>
 
     <script>
         const dropZone = document.getElementById('drop-zone');
@@ -75,7 +132,7 @@
         const progressBar = document.getElementById('progress-bar');
         const progressPercent = document.getElementById('progress-percent');
         const statusText = document.getElementById('status-text');
-        const convertBtn = document.getElementById('convert-btn');
+        const mergeBtn = document.getElementById('merge-btn');
 
         let selectedFiles = [];
 
@@ -94,17 +151,17 @@
             selectedFilesDiv.innerHTML = html;
             selectedFilesDiv.classList.remove('hidden');
 
-            dropText.textContent = "Prêt à fusionner !";
-            dropSubtext.textContent = "Clique sur le bouton ci-dessous";
-            dropIcon.classList.remove('fa-cloud-upload-alt');
+            dropText.textContent = "Prêt à fusionner";
+            dropSubtext.textContent = "Cliquez sur le bouton ci-dessous";
+            dropIcon.classList.remove('fa-file-pdf');
             dropIcon.classList.add('fa-check-circle', 'text-green-500');
         }
 
         async function mergePDF() {
-            if (selectedFiles.length < 2) return alert("Sélectionne au moins 2 fichiers PDF");
+            if (selectedFiles.length < 2) return alert("Sélectionnez au moins 2 fichiers PDF");
 
             progressArea.classList.remove('hidden');
-            convertBtn.disabled = true;
+            mergeBtn.disabled = true;
 
             let progress = 0;
             const interval = setInterval(() => {
@@ -112,7 +169,7 @@
                 if (progress > 92) progress = 92;
                 progressBar.style.width = `${progress}%`;
                 progressPercent.textContent = `${Math.round(progress)}%`;
-            }, 350);
+            }, 300);
 
             try {
                 const formData = new FormData();
@@ -133,7 +190,7 @@
                 a.click();
 
                 setTimeout(() => {
-                    alert("✅ Fusion terminée avec succès ! Le fichier a été téléchargé.");
+                    alert("✅ Fusion terminée avec succès !");
                     resetUI();
                 }, 1000);
 
@@ -146,32 +203,13 @@
         function resetUI() {
             progressArea.classList.add('hidden');
             selectedFilesDiv.classList.add('hidden');
-            convertBtn.disabled = false;
+            mergeBtn.disabled = false;
             fileInput.value = '';
-            dropText.textContent = "Dépose tes fichiers PDF ici";
-            dropSubtext.textContent = "Minimum 2 fichiers";
-            dropIcon.classList.add('fa-cloud-upload-alt');
+            dropText.textContent = "Déposez vos fichiers PDF ici";
+            dropSubtext.textContent = "ou cliquez pour sélectionner (minimum 2 fichiers)";
+            dropIcon.classList.add('fa-file-pdf');
             dropIcon.classList.remove('fa-check-circle', 'text-green-500');
         }
     </script>
-       <!-- Footer commun -->
-    <footer class="bg-white border-t mt-20 py-12">
-        <div class="max-w-6xl mx-auto px-6 text-center text-sm text-gray-500">
-            <div class="flex flex-wrap justify-center gap-6 mb-6">
-                <a href="/" class="hover:text-gray-700">Accueil</a>
-                <a href="/heic" class="hover:text-gray-700">HEIC</a>
-                <a href="/merge" class="hover:text-gray-700">Fusion PDF</a>
-                <a href="/pdf-to-word" class="hover:text-gray-700">PDF → Word</a>
-                <a href="/compress" class="hover:text-gray-700">Compresser PDF</a>
-            </div>
-            
-            <div class="flex flex-wrap justify-center gap-6 text-xs mt-6">
-                <a href="/about" class="hover:text-gray-700">À propos</a>
-                <a href="/privacy" class="hover:text-gray-700">Politique de Confidentialité</a>
-            </div>
-            
-            <p class="mt-8">&copy; 2026 Replygen - Tous droits réservés</p>
-        </div>
-    </footer>
 </body>
 </html>
