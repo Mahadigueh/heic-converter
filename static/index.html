@@ -4,136 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outil Tout-en-Un - Replygen</title>
+    <meta name="description" lang="fr" content="Replygen : Outils gratuits et rapides pour convertir HEIC en PNG/JPG, fusionner PDF, PDF vers Word et compresser des fichiers. Simple, sécurisé et sans inscription.">
+    <meta name="description" lang="en" content="Replygen: Free and fast tools to convert HEIC to PNG/JPG, merge PDFs, convert PDF to Word and compress files. Simple, secure and no registration.">
+    <meta name="description" lang="es" content="Replygen: Herramientas gratuitas y rápidas para convertir HEIC a PNG/JPG, fusionar PDF, PDF a Word y comprimir archivos. Simple, seguro y sin registro.">
+    <meta name="description" lang="ar" content="Replygen: أدوات مجانية وسريعة لتحويل HEIC إلى PNG/JPG، دمج ملفات PDF، تحويل PDF إلى Word وضغط الملفات. بسيطة وآمنة بدون تسجيل.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        .tool-card { transition: all 0.3s ease; }
-        .tool-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); }
+        .tool-card { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .tool-card:hover { 
+            transform: translateY(-12px) scale(1.03); 
+            box-shadow: 0 35px 70px -15px rgb(0 0 0 / 0.18); 
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #5b21b6 0%, #4f46e5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.25) 0%, transparent 70%);
+            animation: gentleMove 25s ease infinite;
+        }
+        @keyframes gentleMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 20px); }
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <!-- Navigation -->
-    <nav class="bg-white border-b sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center">
-            <h1 onclick="window.location.href='/'" class="text-3xl font-bold cursor-pointer text-gray-900 hover:text-purple-600">
+    <nav class="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-6 py-4 md:py-5 flex justify-between items-center">
+            <h1 onclick="window.location.href='/'" class="text-2xl md:text-3xl font-bold cursor-pointer text-gray-900 hover:text-purple-600 transition">
                 Replygen
             </h1>
-            <div class="flex items-center gap-2 text-sm font-medium">
-                <a href="/" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Accueil</a>
-                <a href="/heic" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">HEIC</a>
-                <a href="/merge" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Fusion PDF</a>
-                <a href="/pdf-to-word" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">PDF → Word</a>
-                <a href="/compress" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Compresser PDF</a>
+            <div class="flex items-center gap-1 md:gap-2 text-sm font-medium overflow-x-auto">
+                <a href="/" class="px-4 py-2 hover:bg-gray-100 rounded-2xl transition whitespace-nowrap">Accueil</a>
+                <a href="/heic" class="px-4 py-2 hover:bg-purple-100 text-purple-700 rounded-2xl transition whitespace-nowrap">HEIC</a>
+                <a href="/merge" class="px-4 py-2 hover:bg-gray-100 rounded-2xl transition whitespace-nowrap">Fusion PDF</a>
+                <a href="/pdf-to-word" class="px-4 py-2 hover:bg-gray-100 rounded-2xl transition whitespace-nowrap">PDF → Word</a>
+                <a href="/compress" class="px-4 py-2 hover:bg-gray-100 rounded-2xl transition whitespace-nowrap">Compresser PDF</a>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-2xl mx-auto py-16 px-6">
-        <div class="text-center mb-16">
-            <h1 class="text-6xl font-bold text-gray-900 mb-4">Replygen</h1>
-            <p class="text-2xl text-gray-600">Outil Tout-en-Un gratuit et rapide de conversion de fichiers</p>
+    <!-- Hero -->
+    <div class="hero-bg text-white py-20 md:py-28">
+        <div class="max-w-4xl mx-auto text-center px-6 relative z-10">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                Convertissez vos fichiers<br>en un clic
+            </h1>
+            <p class="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl mx-auto">
+                Gratuit • Rapide • Sans inscription • Confidentialité totale
+            </p>
+            <a href="/heic" 
+               class="inline-block bg-white text-purple-700 px-10 py-5 rounded-3xl text-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-2xl">
+                Commencer maintenant →
+            </a>
         </div>
+    </div>
 
+    <div class="max-w-5xl mx-auto py-16 md:py-20 px-6">
         <!-- Outils -->
-        <div class="space-y-6 mb-20">
-            <a href="/heic" class="tool-card block bg-white rounded-3xl p-8 border border-purple-200 hover:border-purple-500">
-                <div class="flex items-center gap-6">
-                    <i class="fas fa-image text-5xl text-purple-500 w-16 flex-shrink-0"></i>
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Nos outils</h2>
+        <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+            <a href="/heic" class="tool-card bg-white rounded-3xl p-6 md:p-8 border border-purple-100 hover:border-purple-400 group">
+                <div class="flex items-start gap-5">
+                    <div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+                        <i class="fas fa-image text-3xl text-purple-600"></i>
+                    </div>
                     <div>
-                        <h3 class="text-2xl font-semibold">HEIC → PNG/JPG</h3>
-                        <p class="text-gray-600 mt-1">Conversion rapide et de haute qualité des photos iPhone avec préservation de la transparence.</p>
+                        <h3 class="text-xl md:text-2xl font-semibold mb-2">HEIC → PNG/JPG</h3>
+                        <p class="text-gray-600">Convertissez vos photos iPhone en formats universels avec ou sans transparence.</p>
                     </div>
                 </div>
             </a>
 
-            <a href="/merge" class="tool-card block bg-white rounded-3xl p-8 border border-red-200 hover:border-red-500">
-                <div class="flex items-center gap-6">
-                    <i class="fas fa-file-pdf text-5xl text-red-500 w-16 flex-shrink-0"></i>
+            <a href="/merge" class="tool-card bg-white rounded-3xl p-6 md:p-8 border border-red-100 hover:border-red-400 group">
+                <div class="flex items-start gap-5">
+                    <div class="w-14 h-14 bg-red-100 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+                        <i class="fas fa-file-pdf text-3xl text-red-600"></i>
+                    </div>
                     <div>
-                        <h3 class="text-2xl font-semibold">Fusionner PDF</h3>
-                        <p class="text-gray-600 mt-1">Combinez plusieurs documents PDF en un seul fichier propre et organisé.</p>
+                        <h3 class="text-xl md:text-2xl font-semibold mb-2">Fusionner PDF</h3>
+                        <p class="text-gray-600">Combinez plusieurs documents en un seul fichier propre.</p>
                     </div>
                 </div>
             </a>
 
-            <a href="/pdf-to-word" class="tool-card block bg-white rounded-3xl p-8 border border-blue-200 hover:border-blue-500">
-                <div class="flex items-center gap-6">
-                    <i class="fas fa-file-word text-5xl text-blue-600 w-16 flex-shrink-0"></i>
+            <a href="/pdf-to-word" class="tool-card bg-white rounded-3xl p-6 md:p-8 border border-blue-100 hover:border-blue-400 group">
+                <div class="flex items-start gap-5">
+                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+                        <i class="fas fa-file-word text-3xl text-blue-600"></i>
+                    </div>
                     <div>
-                        <h3 class="text-2xl font-semibold">PDF → Word</h3>
-                        <p class="text-gray-600 mt-1">Transformez vos PDF en documents Word parfaitement éditables et modifiables.</p>
+                        <h3 class="text-xl md:text-2xl font-semibold mb-2">PDF → Word</h3>
+                        <p class="text-gray-600">Transformez vos PDF en documents Word modifiables.</p>
                     </div>
                 </div>
             </a>
 
-            <a href="/compress" class="tool-card block bg-white rounded-3xl p-8 border border-amber-200 hover:border-amber-500">
-                <div class="flex items-center gap-6">
-                    <i class="fas fa-compress text-5xl text-amber-500 w-16 flex-shrink-0"></i>
+            <a href="/compress" class="tool-card bg-white rounded-3xl p-6 md:p-8 border border-amber-100 hover:border-amber-400 group">
+                <div class="flex items-start gap-5">
+                    <div class="w-14 h-14 bg-amber-100 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition">
+                        <i class="fas fa-compress text-3xl text-amber-600"></i>
+                    </div>
                     <div>
-                        <h3 class="text-2xl font-semibold">Compresser PDF</h3>
-                        <p class="text-gray-600 mt-1">Réduisez drastiquement la taille de vos fichiers PDF tout en conservant la qualité.</p>
+                        <h3 class="text-xl md:text-2xl font-semibold mb-2">Compresser PDF</h3>
+                        <p class="text-gray-600">Réduisez jusqu’à 90% la taille de vos fichiers PDF.</p>
                     </div>
                 </div>
             </a>
         </div>
 
-        <!-- Pourquoi Replygen -->
-        <div class="bg-white rounded-3xl p-10 mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8">Pourquoi choisir Replygen ?</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="flex gap-4">
-                    <i class="fas fa-check-circle text-2xl text-green-500 mt-1"></i>
-                    <div>
-                        <h3 class="font-semibold">100% Gratuit</h3>
-                        <p class="text-gray-600 text-sm">Aucune limite, aucun abonnement, aucune inscription.</p>
-                    </div>
+        <!-- Comment ça marche -->
+        <div class="mt-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Comment ça marche ?</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-4xl font-bold mb-6">1</div>
+                    <h3 class="font-semibold mb-3">Choisissez l’outil</h3>
+                    <p class="text-gray-600">Sélectionnez HEIC, Fusion PDF, PDF vers Word ou Compression.</p>
                 </div>
-                <div class="flex gap-4">
-                    <i class="fas fa-shield-alt text-2xl text-green-500 mt-1"></i>
-                    <div>
-                        <h3 class="font-semibold">Confidentialité Totale</h3>
-                        <p class="text-gray-600 text-sm">Vos fichiers sont supprimés automatiquement après traitement.</p>
-                    </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-4xl font-bold mb-6">2</div>
+                    <h3 class="font-semibold mb-3">Déposez vos fichiers</h3>
+                    <p class="text-gray-600">Glissez-déposez ou cliquez pour sélectionner vos documents.</p>
                 </div>
-                <div class="flex gap-4">
-                    <i class="fas fa-bolt text-2xl text-green-500 mt-1"></i>
-                    <div>
-                        <h3 class="font-semibold">Rapide et Efficace</h3>
-                        <p class="text-gray-600 text-sm">Conversion côté serveur avec des outils professionnels.</p>
-                    </div>
-                </div>
-                <div class="flex gap-4">
-                    <i class="fas fa-mobile-alt text-2xl text-green-500 mt-1"></i>
-                    <div>
-                        <h3 class="font-semibold">Compatible partout</h3>
-                        <p class="text-gray-600 text-sm">Fonctionne sur ordinateur, téléphone et tablette.</p>
-                    </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-4xl font-bold mb-6">3</div>
+                    <h3 class="font-semibold mb-3">Téléchargez le résultat</h3>
+                    <p class="text-gray-600">Recevez votre fichier converti en quelques secondes.</p>
                 </div>
             </div>
         </div>
 
-        <!-- FAQ -->
-        <div class="mb-20">
-            <h2 class="text-3xl font-bold text-center mb-8">Questions Fréquentes</h2>
-            <div class="space-y-6 text-left">
-                <div>
-                    <h3 class="font-semibold">Est-ce vraiment gratuit ?</h3>
-                    <p class="text-gray-600">Oui, tous nos outils sont 100% gratuits et sans aucune limitation.</p>
+        <!-- Pourquoi Replygen -->
+        <div class="mt-24 bg-white rounded-3xl p-8 md:p-12 shadow-sm">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10">Pourquoi choisir Replygen ?</h2>
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12">
+                <div class="flex gap-5">
+                    <i class="fas fa-check-circle text-3xl text-green-500 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg">100% Gratuit</h3>
+                        <p class="text-gray-600">Aucune limite, aucun abonnement.</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="font-semibold">Mes fichiers sont-ils sécurisés ?</h3>
-                    <p class="text-gray-600">Oui. Ils sont traités de manière sécurisée et supprimés automatiquement après la conversion.</p>
+                <div class="flex gap-5">
+                    <i class="fas fa-shield-alt text-3xl text-green-500 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg">Confidentialité Totale</h3>
+                        <p class="text-gray-600">Fichiers supprimés automatiquement.</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="font-semibold">Pourquoi Replygen est-il plus rapide ?</h3>
-                    <p class="text-gray-600">Nous utilisons des serveurs puissants et des bibliothèques optimisées pour des conversions rapides.</p>
+                <div class="flex gap-5">
+                    <i class="fas fa-bolt text-3xl text-green-500 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg">Ultra Rapide</h3>
+                        <p class="text-gray-600">Conversion côté serveur optimisée.</p>
+                    </div>
+                </div>
+                <div class="flex gap-5">
+                    <i class="fas fa-mobile-alt text-3xl text-green-500 mt-1 flex-shrink-0"></i>
+                    <div>
+                        <h3 class="font-semibold text-lg">Accessible partout</h3>
+                        <p class="text-gray-600">Sur ordinateur, téléphone et tablette.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-white border-t mt-20 py-12">
+    <footer class="bg-white border-t py-12">
         <div class="max-w-6xl mx-auto px-6 text-center text-sm text-gray-500">
             <div class="flex flex-wrap justify-center gap-6 mb-6">
                 <a href="/" class="hover:text-gray-700">Accueil</a>

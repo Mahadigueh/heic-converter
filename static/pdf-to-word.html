@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF → Word - Replygen</title>
+    <meta name="description" lang="fr" content="Transformez vos fichiers PDF en documents Word (.docx) entièrement modifiables. Extraction intelligente du texte.">
+    <meta name="description" lang="en" content="Convert PDF files to fully editable Word documents (.docx). Smart text extraction.">
+    <meta name="description" lang="es" content="Convierta archivos PDF a documentos Word (.docx) completamente editables. Extracción inteligente de texto.">
+    <meta name="description" lang="ar" content="حول ملفات PDF إلى مستندات Word قابلة للتعديل بالكامل. استخراج ذكي للنص.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        .drop-zone { transition: all 0.3s ease; }
-        .drop-zone.dragover { background-color: #f3e8ff; border-color: #7c3aed; transform: scale(1.02); }
+        .drop-zone { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .drop-zone.dragover { background-color: #f3e8ff; border-color: #7c3aed; transform: scale(1.03); }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
@@ -22,16 +26,16 @@
                 <a href="/" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Accueil</a>
                 <a href="/heic" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">HEIC</a>
                 <a href="/merge" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Fusion PDF</a>
-                <a href="/pdf-to-word" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">PDF → Word</a>
+                <a href="/pdf-to-word" class="px-5 py-2.5 hover:bg-blue-100 text-blue-700 rounded-2xl">PDF → Word</a>
                 <a href="/compress" class="px-5 py-2.5 hover:bg-gray-100 rounded-2xl">Compresser PDF</a>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-2xl mx-auto py-12 px-6">
-        <div class="text-center mb-10">
+    <div class="max-w-3xl mx-auto py-12 px-6">
+        <div class="text-center mb-12">
             <h2 class="text-5xl font-bold text-gray-900">PDF → Word</h2>
-            <p class="text-xl text-gray-600 mt-4">Transformez vos fichiers PDF en documents Word (.docx) modifiables</p>
+            <p class="text-xl text-gray-600 mt-4">Transformez vos fichiers PDF en documents Word (.docx) entièrement modifiables</p>
         </div>
 
         <div id="drop-zone" class="drop-zone border-4 border-dashed border-gray-300 rounded-3xl p-16 text-center cursor-pointer bg-white">
@@ -55,54 +59,70 @@
             </div>
         </div>
 
-        <button onclick="convertToWord()" id="convert-btn"
-                class="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white py-6 rounded-3xl text-xl font-semibold">
+        <button onclick="convertToWord()" id="convert-btn" class="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white py-6 rounded-3xl text-xl font-semibold">
             Convertir en Word
         </button>
 
-        <!-- Description détaillée -->
-        <div class="mt-16 bg-white rounded-3xl p-10">
-            <h3 class="font-semibold text-2xl mb-6">Pourquoi convertir PDF en Word ?</h3>
-            <p class="text-gray-600 mb-8">Les PDF sont parfaits pour la lecture, mais difficiles à modifier. Replygen extrait le texte et la mise en forme pour vous donner un document Word entièrement éditable.</p>
+        <!-- Contenu enrichi -->
+        <div class="mt-20 space-y-16">
             
-            <h4 class="font-semibold mb-4">Avantages :</h4>
-            <ul class="list-disc pl-6 space-y-3 text-gray-600">
-                <li>Texte modifiable dans Word, Google Docs, LibreOffice...</li>
-                <li>Conservation de la structure (titres, paragraphes)</li>
-                <li>Conversion rapide et de bonne qualité</li>
-                <li>Confidentialité totale : fichier supprimé après conversion</li>
-            </ul>
-        </div>
+            <div class="bg-white rounded-3xl p-10">
+                <h3 class="text-2xl font-bold mb-6">Pourquoi convertir un PDF en Word ?</h3>
+                <p class="text-gray-600 leading-relaxed">Les fichiers PDF sont parfaits pour la lecture et la conservation, mais très difficiles à modifier. Replygen extrait le texte, les titres et la structure pour vous donner un document Word (.docx) prêt à être édité.</p>
+            </div>
 
-        <!-- Comment ça marche + FAQ -->
-        <div class="mt-12 bg-white rounded-3xl p-10">
-            <h3 class="font-semibold text-xl mb-6">Comment ça marche ?</h3>
-            <ol class="list-decimal pl-6 space-y-4 text-gray-600">
-                <li>Déposez votre fichier PDF</li>
-                <li>Cliquez sur "Convertir en Word"</li>
-                <li>Attendez quelques secondes</li>
-                <li>Téléchargez votre document .docx</li>
-            </ol>
+            <div class="bg-white rounded-3xl p-10">
+                <h3 class="text-2xl font-bold mb-6">Avantages de notre convertisseur</h3>
+                <ul class="space-y-4 text-gray-600">
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Texte entièrement modifiable dans Word, Google Docs ou LibreOffice</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Conservation de la structure (titres, paragraphes, listes)</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Conversion rapide et de bonne qualité</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Aucune inscription requise</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Confidentialité totale : fichier supprimé après conversion</li>
+                </ul>
+            </div>
 
-            <h4 class="font-semibold mt-10 mb-4">Questions fréquentes</h4>
-            <div class="space-y-6 text-sm">
-                <div>
-                    <p class="font-medium">La mise en forme est-elle conservée ?</p>
-                    <p class="text-gray-500">Oui, dans la mesure du possible (titres, paragraphes, listes). Les images complexes peuvent être simplifiées.</p>
-                </div>
-                <div>
-                    <p class="font-medium">Puis-je convertir plusieurs fichiers ?</p>
-                    <p class="text-gray-500">Pour le moment un seul fichier à la fois.</p>
-                </div>
-                <div>
-                    <p class="font-medium">Mes données sont-elles sécurisées ?</p>
-                    <p class="text-gray-500">Oui, tout est traité temporairement et supprimé immédiatement après.</p>
+            <div class="bg-white rounded-3xl p-10">
+                <h3 class="text-2xl font-bold mb-6">Cas d’utilisation courants</h3>
+                <ul class="space-y-4 text-gray-600">
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Modifier des contrats ou formulaires PDF</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Mettre à jour des rapports ou CV</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Extraire du texte d’un livre ou d’un manuel</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Traduire ou corriger un document PDF</li>
+                    <li class="flex gap-3"><span class="text-green-500 font-bold">✔</span> Réutiliser du contenu provenant d’un PDF</li>
+                </ul>
+            </div>
+
+            <!-- Comment ça marche + FAQ -->
+            <div class="bg-white rounded-3xl p-10">
+                <h3 class="text-2xl font-bold mb-6">Comment ça marche ?</h3>
+                <ol class="list-decimal pl-6 space-y-6 text-gray-600">
+                    <li>Déposez votre fichier PDF</li>
+                    <li>Cliquez sur "Convertir en Word"</li>
+                    <li>Attendez quelques secondes</li>
+                    <li>Téléchargez votre document .docx modifiable</li>
+                </ol>
+
+                <h4 class="font-semibold mt-12 mb-6 text-xl">Questions fréquentes</h4>
+                <div class="space-y-8 text-sm">
+                    <div>
+                        <p class="font-medium">La mise en forme est-elle bien conservée ?</p>
+                        <p class="text-gray-500 mt-2">Oui, dans la mesure du possible (titres, paragraphes, listes). Les tableaux et images complexes peuvent être simplifiés.</p>
+                    </div>
+                    <div>
+                        <p class="font-medium">Puis-je convertir plusieurs fichiers ?</p>
+                        <p class="text-gray-500 mt-2">Pour le moment, un seul fichier à la fois. Le mode multi-fichiers arrivera bientôt.</p>
+                    </div>
+                    <div>
+                        <p class="font-medium">Mes données restent-elles privées ?</p>
+                        <p class="text-gray-500 mt-2">Oui. Le fichier est traité temporairement et supprimé immédiatement après conversion.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer identique -->
     <footer class="bg-white border-t mt-20 py-12">
         <div class="max-w-6xl mx-auto px-6 text-center text-sm text-gray-500">
             <div class="flex flex-wrap justify-center gap-6 mb-6">
