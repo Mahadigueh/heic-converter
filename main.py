@@ -59,6 +59,11 @@ async def privacy_page():
     with open("static/privacy.html", "r", encoding="utf-8") as f:
         return f.read()
 
+@app.get("/terms", response_class=HTMLResponse)
+async def terms_page():
+    with open("static/terms.html", "r", encoding="utf-8") as f:
+        return f.read()
+
 # ====================== CONVERSIONS ======================
 @app.post("/convert-heic")
 async def convert_heic(files: List[UploadFile] = File(...), format: str = "png"):
