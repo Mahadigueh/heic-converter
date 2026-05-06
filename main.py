@@ -63,6 +63,11 @@ async def privacy_page():
 async def terms_page():
     with open("static/terms.html", "r", encoding="utf-8") as f:
         return f.read()
+    
+@app.get("/ads.txt", response_class=HTMLResponse)
+async def ads_txt():
+    with open("static/ads.txt", "r", encoding="utf-8") as f:
+        return f.read()
 
 # ====================== CONVERSIONS ======================
 @app.post("/convert-heic")
